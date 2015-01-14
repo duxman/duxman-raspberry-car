@@ -1,3 +1,5 @@
+package duxman.lib.log;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -7,7 +9,6 @@
  *
  * @author aduce
  */
-import java.util.Iterator;
 import org.apache.log4j.Logger;
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 import org.apache.log4j.Level;

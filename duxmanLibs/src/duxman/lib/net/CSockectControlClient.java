@@ -1,5 +1,5 @@
+package duxman.lib.net;
 
-import com.sun.org.apache.xalan.internal.xsltc.trax.SAX2StAXBaseWriter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStream;
@@ -61,7 +61,7 @@ public abstract class CSockectControlClient extends CSockectControl
     }
   }
    
-  public boolean ejecutar()
+  @Override  public boolean ProcesoEjecucion()
   {
     boolean rtn=true;
     try

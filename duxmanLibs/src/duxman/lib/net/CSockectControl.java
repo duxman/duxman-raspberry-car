@@ -1,3 +1,5 @@
+package duxman.lib.net;
+
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import duxman.lib.util.CSubProceso;
 
 /*
  * To change this template, choose Tools | Templates
@@ -18,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author aduce
  */
-public abstract class CSockectControl
+public abstract class CSockectControl extends CSubProceso
 {
   public    BufferedReader        m_bfInput = null;
   public    BufferedWriter        m_bfOutput = null;
@@ -31,6 +34,7 @@ public abstract class CSockectControl
   
   public CSockectControl(String sServerName)
   {
+    super(sServerName+"_Hilo_Principal");
     m_sServerName = sServerName;
     m_sDatosInput="";    
     m_sDatosOutput="";
@@ -39,7 +43,7 @@ public abstract class CSockectControl
   
   public abstract boolean compruebaFinal(String sDato);
   public abstract boolean ProcesaDatos(String sDato);
-  
+    
   public void setSalir(boolean  bSalir)
   {
     synchronized(m_bSalir)

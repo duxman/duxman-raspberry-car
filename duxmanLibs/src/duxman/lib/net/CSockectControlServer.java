@@ -1,3 +1,5 @@
+package duxman.lib.net;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -11,6 +13,7 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 public abstract class CSockectControlServer extends CSockectControl
 {
   private int                   m_iPuertoConexion; 
@@ -26,12 +29,12 @@ public abstract class CSockectControlServer extends CSockectControl
   }
   
           
-  public CSockectControlServer(String sServerName,  InputStream input,  OutputStream output )
+  public CSockectControlServer(String sServerName )
   {
     super( sServerName );
     try
     {      
-      creaBufferStream(input, output);
+  
       m_iPuertoConexion = 0;     
     }
     catch (Exception ex)
@@ -39,7 +42,7 @@ public abstract class CSockectControlServer extends CSockectControl
       Logger.getLogger (CSockectControlServer.class.getName()).log (Level.SEVERE, null, ex);
     }
   }
-  
+   
   
   public void initServer()
   {
@@ -47,6 +50,9 @@ public abstract class CSockectControlServer extends CSockectControl
     {
       m_serverSocket  = new ServerSocket ( m_iPuertoConexion );
       m_socket        = new Socket();      
+      m_socket = m_serverSocket.accept ();
+      m_sUsuarioConectado = m_socket.getRemoteSocketAddress ().toString ();
+      creaBufferStream( m_socket );
     }
     catch(Exception e)
     {
@@ -55,16 +61,12 @@ public abstract class CSockectControlServer extends CSockectControl
   }
       
   
-  public boolean ejecutar()
+  @Override  public boolean ProcesoEjecucion()
   {
     boolean rtn=true;
     try
-    {     
-      m_socket = m_serverSocket.accept ();
-      m_sUsuarioConectado = m_socket.getRemoteSocketAddress ().toString ();
-      creaBufferStream( m_socket );
-      setSalir ( false );
-      
+    {                 
+      setSalir ( false );      
       while( condicionSalida() )       
       {
          EsperaSalir ();
