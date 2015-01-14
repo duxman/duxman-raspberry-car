@@ -5,6 +5,7 @@
  */
 package duxman.lib.net.blue;
 
+import duxman.lib.net.CSockectControlServer;
 import java.io.*;
 import static java.lang.Math.random;
 import java.util.Random;
@@ -20,7 +21,7 @@ import duxman.lib.util.*;
  *
  * @author duxman
  */
-public abstract class CBluetoothControlServer extends CSubProceso
+public abstract class CBluetoothControlServer extends CSockectControlServer
 {
     LocalDevice m_DispositivoLocal = null;
     
@@ -38,7 +39,7 @@ public abstract class CBluetoothControlServer extends CSubProceso
     
     public CBluetoothControlServer(String sServerName)
     {
-        super( "Hilo_" + sServerName);
+        super( sServerName);
         try
         {
             
@@ -56,10 +57,7 @@ public abstract class CBluetoothControlServer extends CSubProceso
           e.printStackTrace();                                
         }
     }
-    
-    public abstract boolean procesarDato(String sDato);
-    public abstract boolean comprobarFinDato(String sDato);
-    
+       
     public void activaVisivilidad()
     {
         try
@@ -71,20 +69,7 @@ public abstract class CBluetoothControlServer extends CSubProceso
             Logger.getLogger(CBluetoothControlServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    @Override public  boolean ProcesoEjecucion() throws Exception
-    {
-         String cadenatmp = m_bfReader.readLine();
-         m_sComandoRecivido = m_sComandoRecivido.concat(cadenatmp);
-         if( comprobarFinDato(m_sComandoRecivido) )
-         {                        
-            System.out.println("Received " + m_sComandoRecivido);
-            procesarDato(m_sComandoRecivido);
-            m_sComandoRecivido="";
-         }                 
-         return true;        
-    }
-    
+               
     private void creaConexion()
     {
         try
@@ -96,14 +81,13 @@ public abstract class CBluetoothControlServer extends CSubProceso
             System.out.println("Iniciamos server");
             ///TODO Moverlo a otro lado un hilo aparte
             m_localServer = (StreamConnectionNotifier)Connector.open(m_sServerURL);
-            while(true)
-            {
-                m_conexionCliente = m_localServer.acceptAndOpen();
-                System.out.println("Cliente conectado");
-
-                //DataInputStream din   = new DataInputStream(conn.openInputStream());
-                m_bfReader    = new BufferedReader(new InputStreamReader( m_conexionCliente.openInputStream() ) );                
-            }
+            m_conexionCliente = m_localServer.acceptAndOpen();
+            
+            System.out.println("Cliente conectado");                            
+            
+            creaBufferStream( m_conexionCliente.openInputStream(), m_conexionCliente.openOutputStream() );            
+            
+            Run();                                   
         }
         catch(Exception e)
         {

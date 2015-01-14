@@ -64,8 +64,7 @@ public abstract class CSubProceso extends Thread implements CDatosComunes
 						brtn = ProcesoEjecucion();
 					}
 					catch(Exception e)
-					{
-						CLog.write(e.getMessage());
+					{						
 						if( !brtn )
 						{
 							setEstado( eEstados.STOP );
@@ -85,7 +84,7 @@ public abstract class CSubProceso extends Thread implements CDatosComunes
 		}
 		catch(Exception e)
 		{	
-			CLog.write(e.getMessage());
+		
 		}				
 	}
 	

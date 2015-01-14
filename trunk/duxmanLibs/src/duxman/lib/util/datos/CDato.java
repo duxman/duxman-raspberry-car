@@ -1,4 +1,4 @@
-package duxman.lib.net.datos;
+package duxman.lib.util.datos;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,7 +82,7 @@ public class CDato implements CDatosComunes
 		}
 		catch(Exception e)
 		{
-			CLog.write(e.getMessage());
+			
 		}
 		finally
 		{

@@ -1,4 +1,4 @@
-package duxman.lib.net.datos;
+package duxman.lib.util.datos;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +33,7 @@ public class CLista
 		}
 		catch(Exception e)
 		{
-			CLog.write( e.getMessage() );
+			
 		}
 		return iRtn;			
 	}
@@ -50,7 +50,7 @@ public class CLista
 		}
 		catch(Exception e)
 		{
-			CLog.write( e.getMessage() );
+			
 		}
 		return Rtn;			
 	}

@@ -4,8 +4,7 @@
  * and open the template in the editor.
  */
 package duxman.lib.net.implementado;
-import duxman.lib.util.*;
-import duxman.lib.net.blue.*;
+import duxman.lib.net.blue.CBluetoothControlServer;
 /**
  *
  * @author duxman
@@ -18,16 +17,15 @@ public class CBtServer extends CBluetoothControlServer
         super(sServerName);
     }
 
-    @Override
-    public boolean procesarDato(String sDato)
+    @Override  public boolean compruebaFinal(String sDato)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public boolean comprobarFinDato(String sDato)
+    @Override  public boolean ProcesaDatos(String sDato)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+ 
     
 }
