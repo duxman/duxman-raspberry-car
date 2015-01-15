@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DuxmanLibs" default="ALL" basedir=".">
+  <property file="buildCI.properties" />
+  <property name="src_dir"            value="src"/>    			
+  <property name="dist_dir"           value="dist"/>    			  
+  <property name="build_dir"          value="build"/>    		
+	<property name="javac_source" 			value="1.6"/> 
+	<property name="javac_target" 			value="1.6"/> 	
+	<property name="source_encoding" 		value="windows-1252"/> 
+	<property name="includes"           value="**"/> 
+	<property name="excludes"           value=""/>
+  <property name="Build_classpath" value="${javac_classpath}" /> 
+  <target name="ALL" depends="BUILD">
+    <!-- TODO define script. See Help menu or http://ant.apache.org/ -->
+  </target>
+  <target name="INI">
+		<tstamp>
+    	<format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+  	</tstamp> 
+    <mkdir dir="${build_dir}"/>
+    <mkdir dir="${dist_dir}"/>
+    <mkdir dir="${dist_dir}/lib"/>
+	</target>
+  
+  <target name="CLEAN">
+    <echo message="Eliminando ${dist_dir}"/>
+    <delete dir="${dist_dir}" followsymlinks="false" includeemptydirs="true" failonerror="false"/>
+    <echo message="Eliminando ${build_dir}"/>
+    <delete dir="${build_dir}" followsymlinks="false" includeemptydirs="true" failonerror="false"/>
+  </target>
+  
+  <target name="BUILD" depends="CLEAN,INI">
+   <javac 	srcdir="${src_dir};" 
+            destdir="${build_dir}" 
+            target="${javac_target}" 
+            classpath="${Build_classpath}"            
+            source="${javac_source}" 
+            encoding="${source_encoding}"                          
+            includes="**"             
+            includeantruntime="false"
+            deprecation="false" 
+            fork="true"				
+            debug="false"
+   >	     
+     <classpath >
+       <fileset dir="./lib" includes="**/*.jar"/>        
+     </classpath>
+   </javac> 
+   
+   <jar destfile="${dist_dir}/${ant.project.name}.jar">
+      <fileset dir="${build_dir}" excludes="**/*.properties;**/*.xml" />
+      <manifest>				
+        <attribute name="Built-Date" value="${TODAY}"/>												
+        <attribute name="Class-Path" value="${Build_classpath}"/>						
+			</manifest>
+    </jar>
+    
+   <copy todir="${dist_dir}/lib">
+       <fileset dir="./lib" includes="**/*.jar"/>        
+   </copy>
+      
+  </target>
+</project>
