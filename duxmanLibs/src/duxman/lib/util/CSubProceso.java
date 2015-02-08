@@ -5,10 +5,12 @@ public abstract class CSubProceso extends Thread implements CDatosComunes
 	
 	private eEstados m_eEstados;
 	private String 	 m_sName;
-	
-	public CSubProceso(String sName)
+	protected CLog m_log;
+        
+	public CSubProceso(String sName, CLog log)
 	{
 		m_sName = sName;
+                m_log   = log;
 		setName( m_sName );
 		
 	}
@@ -69,6 +71,7 @@ public abstract class CSubProceso extends Thread implements CDatosComunes
 						{
 							setEstado( eEstados.STOP );
 						}
+                                                m_log.excepcion(e);
 					}
 					
 				}
@@ -84,7 +87,7 @@ public abstract class CSubProceso extends Thread implements CDatosComunes
 		}
 		catch(Exception e)
 		{	
-		
+                    m_log.excepcion(e);
 		}				
 	}
 	

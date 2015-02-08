@@ -83,7 +83,7 @@ public class CLog
     
     public Logger setLogger(Class<?> clase) throws Exception
     {      
-      return setLogger (clase, Level.INFO);
+      return setLogger (clase, Level.ALL);
     }
     
     public void setLevel( Level level)
@@ -91,8 +91,9 @@ public class CLog
       m_logger.setLevel (level);
     }
     
+    
     public void write ( Level iLevel, String sCadena )
-    {
+    {            
       switch( iLevel.toInt ())
       {
         case Level.DEBUG_INT:
@@ -124,26 +125,26 @@ public class CLog
     }
     public void write(String sCadena)
     {
-      m_logger.info (sCadena);
+        write (Level.INFO,sCadena);
     }
     
     public void error(String sCadena)
     {
-      m_logger.error (sCadena);
+        write (Level.ERROR,sCadena);
     }
     
     public void trace(String sCadena)
     {
-      m_logger.trace (sCadena);
+        write(Level.TRACE, sCadena);
     }
     
     public void excepcion( Exception e)
     {
-      m_logger.error ( e.getMessage () );
+      error ( e.getMessage () );
       StackTraceElement[] aStack = e.getStackTrace();
       for( int i = 0 ; i< aStack.length; i++ )
       {
-        m_logger.error ( aStack[i].toString () );  
+        write( Level.FATAL,aStack[i].toString () );  
       }            
     }        
   

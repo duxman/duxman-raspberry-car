@@ -1,3 +1,5 @@
+package duxmancar.lib.log;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -7,7 +9,6 @@
  *
  * @author aduce
  */
-import java.util.Iterator;
 import org.apache.log4j.Logger;
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 import org.apache.log4j.Level;
@@ -44,7 +45,7 @@ public class CLog
         rootLogger.setLevel(Level.ALL);
         
         //Define log pattern layout
-        PatternLayout layout = new PatternLayout("[%d{yyyy-MM-dd HH:mm:ss,SSS}][%-5p][%C.%M]: [ %m%n ]");
+        PatternLayout layout = new PatternLayout("[%d{yyyy-MM-dd HH:mm:ss,SSS}][%-5p][%C.%M (%L)]: [ %m ]%n");
  
         //Add console appender to root logger
         rootLogger.addAppender(new ConsoleAppender(layout));
@@ -82,7 +83,7 @@ public class CLog
     
     public Logger setLogger(Class<?> clase) throws Exception
     {      
-      return setLogger (clase, Level.INFO);
+      return setLogger (clase, Level.ALL);
     }
     
     public void setLevel( Level level)
@@ -90,8 +91,9 @@ public class CLog
       m_logger.setLevel (level);
     }
     
+    
     public void write ( Level iLevel, String sCadena )
-    {
+    {            
       switch( iLevel.toInt ())
       {
         case Level.DEBUG_INT:
@@ -123,26 +125,26 @@ public class CLog
     }
     public void write(String sCadena)
     {
-      m_logger.info (sCadena);
+        write (Level.INFO,sCadena);
     }
     
     public void error(String sCadena)
     {
-      m_logger.error (sCadena);
+        write (Level.ERROR,sCadena);
     }
     
     public void trace(String sCadena)
     {
-      m_logger.trace (sCadena);
+        write(Level.TRACE, sCadena);
     }
     
     public void excepcion( Exception e)
     {
-      m_logger.error ( e.getMessage () );
+      error ( e.getMessage () );
       StackTraceElement[] aStack = e.getStackTrace();
       for( int i = 0 ; i< aStack.length; i++ )
       {
-        m_logger.error ( aStack[i].toString () );  
+        write( Level.FATAL,aStack[i].toString () );  
       }            
     }        
   

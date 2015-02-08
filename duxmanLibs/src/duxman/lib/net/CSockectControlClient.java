@@ -1,5 +1,6 @@
 package duxman.lib.net;
 
+import duxman.lib.log.CLog;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStream;
@@ -25,17 +26,17 @@ public abstract class CSockectControlClient extends CSockectControl
   private Socket                m_socket; 
   private String                m_sUsuarioConectado;
   
-  public CSockectControlClient(String sServerName,String sUrlServidor, int iPuertoConexion )
+  public CSockectControlClient(String sServerName,String sUrlServidor, int iPuertoConexion,CLog log )
   {
-    super(sServerName);
+    super(sServerName, log);
     
     m_iPuertoConexion = iPuertoConexion;
     m_sUrlServidor    = sUrlServidor;    
   }
             
-  public CSockectControlClient(String sServerName,  InputStream input,  OutputStream output )
+  public CSockectControlClient(String sServerName,  InputStream input,  OutputStream output, CLog log )
   {
-    super( sServerName );
+    super( sServerName, log );
     try
     {      
       creaBufferStream(input, output);
@@ -43,7 +44,7 @@ public abstract class CSockectControlClient extends CSockectControl
     }
     catch (Exception ex)
     {
-      Logger.getLogger (CSockectControlServer.class.getName()).log (Level.SEVERE, null, ex);
+        m_log.excepcion(ex);
     }
   }
   
@@ -57,7 +58,7 @@ public abstract class CSockectControlClient extends CSockectControl
     }
     catch(Exception e)
     {
-       e.printStackTrace ();
+        m_log.excepcion(e);
     }
   }
    
@@ -79,7 +80,7 @@ public abstract class CSockectControlClient extends CSockectControl
     }
     catch (Exception ex)
     {
-      Logger.getLogger (CSockectControlServer.class.getName()).log (Level.SEVERE, null, ex);
+      m_log.excepcion(ex);
     }
     return rtn;
   }  

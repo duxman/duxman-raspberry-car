@@ -8,17 +8,18 @@ import java.util.List;
 import java.util.ListIterator;
 
 import duxman.lib.log.CLog;
+import duxman.lib.util.CBasicaDux;
 
-public class CLista<T> 
+public class CLista<T> extends CBasicaDux
 {
 	private List<T> m_ListaDatos;
 	private String m_sNombreLista;
-	
-	
-	public CLista(String sNombreLista)
+		
+	public CLista(CLog log, String sNombreLista)
 	{
-		m_ListaDatos =  Collections.synchronizedList(new ArrayList<T>());
-		m_sNombreLista = sNombreLista;		
+            super(log);
+            m_ListaDatos =  Collections.synchronizedList(new ArrayList<T>());
+            m_sNombreLista = sNombreLista;		
 	}
 	
   public T damePrimerElemento()

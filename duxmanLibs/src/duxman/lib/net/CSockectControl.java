@@ -1,6 +1,7 @@
 package duxman.lib.net;
 
 
+import duxman.lib.log.CLog;
 import duxman.lib.util.CDatosComunes;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -33,9 +34,9 @@ public abstract class CSockectControl extends CSubProceso implements  CDatosComu
   protected CHiloSalida           m_hiloSalida;
   private   Boolean               m_bSalir;
   
-  public CSockectControl(String sServerName)
+  public CSockectControl(String sServerName, CLog log )
   {
-    super(sServerName+"_Hilo_Principal");
+    super(sServerName+"_Hilo_Principal", log);
     m_sServerName = sServerName;
     m_sDatosInput="";    
     m_sDatosOutput="";
@@ -124,14 +125,21 @@ public abstract class CSockectControl extends CSubProceso implements  CDatosComu
   
   protected void creaBufferStream(Socket sockect ) throws Exception
   {
-      m_bfInput  = new BufferedReader ( new InputStreamReader ( sockect.getInputStream  () ) );
-      m_hiloEntrada = new CHiloEntrada ();
-      
-      m_bfOutput = new BufferedWriter ( new OutputStreamWriter( sockect.getOutputStream () ) );        
-      m_hiloSalida = new CHiloSalida ();
-      
-      m_hiloEntrada.start ();
-      m_hiloSalida.start ();
+      try
+      {
+        m_bfInput  = new BufferedReader ( new InputStreamReader ( sockect.getInputStream  () ) );
+        m_hiloEntrada = new CHiloEntrada ();
+
+        m_bfOutput = new BufferedWriter ( new OutputStreamWriter( sockect.getOutputStream () ) );        
+        m_hiloSalida = new CHiloSalida ();
+
+        m_hiloEntrada.start ();
+        m_hiloSalida.start ();
+      }
+      catch(Exception e)
+      {
+         m_log.excepcion(e);
+      }
       
   }
   
@@ -149,14 +157,21 @@ public abstract class CSockectControl extends CSubProceso implements  CDatosComu
    
   protected void creaBufferStream(InputStream input,  OutputStream output ) throws Exception
   {
-      m_bfInput  = new BufferedReader ( new InputStreamReader ( input ) );
-      m_hiloEntrada = new CHiloEntrada ();
-      
-      m_bfOutput = new BufferedWriter ( new OutputStreamWriter( output ) );        
-      m_hiloSalida = new CHiloSalida ();
-      
-      m_hiloEntrada.start ();
-      m_hiloSalida.start ();      
+      try
+      {
+        m_bfInput  = new BufferedReader ( new InputStreamReader ( input ) );
+        m_hiloEntrada = new CHiloEntrada ();
+
+        m_bfOutput = new BufferedWriter ( new OutputStreamWriter( output ) );        
+        m_hiloSalida = new CHiloSalida ();
+
+        m_hiloEntrada.start ();
+        m_hiloSalida.start ();      
+      }
+      catch(Exception e)
+      {
+          m_log.excepcion(e);
+      }
   }
   
   protected class CHiloEntrada extends Thread
@@ -182,7 +197,7 @@ public abstract class CSockectControl extends CSubProceso implements  CDatosComu
         }
         catch (Exception ex)
         {
-          Logger.getLogger (CSockectControlServer.class.getName()).log (Level.SEVERE, null, ex);
+          m_log.excepcion(ex );
         }
       }
       
@@ -208,7 +223,7 @@ public abstract class CSockectControl extends CSubProceso implements  CDatosComu
         }
         catch (Exception ex)
         {
-          Logger.getLogger (CSockectControlServer.class.getName()).log (Level.SEVERE, null, ex);
+            m_log.excepcion(ex);
         }
       }
       
