@@ -5,9 +5,13 @@
  */
 package duxman.lib.net.blue;
 
+import duxman.lib.log.CLog;
 import duxman.lib.net.CSockectControlServer;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.bluetooth.BluetoothStateException;
 import javax.bluetooth.DiscoveryAgent;
 import javax.bluetooth.LocalDevice;
@@ -21,23 +25,20 @@ import javax.microedition.io.StreamConnectionNotifier;
  */
 public abstract class CBluetoothControlServer extends CSockectControlServer
 {
-    LocalDevice m_DispositivoLocal = null;
+    
     
     //public UUID uuid = null;
-     
-    
-    private String                   m_sServerName      = ""; 
+            
     private UUID                     m_ServerUUID       = null;  
-    private String                   m_sServerURL       = "";
-    private LocalDevice              m_localDevice      = null;
+    private String                   m_sServerURL       = "";    
     private StreamConnectionNotifier m_localServer      = null;
     private StreamConnection         m_conexionCliente  = null;
-    private String                   m_sComandoRecivido = "";
-    private BufferedReader           m_bfReader         = null;
+    private LocalDevice              m_DispositivoLocal = null;   
+    private Boolean                  m_conectado        = false;
     
-    public CBluetoothControlServer(String sServerName)
+    public CBluetoothControlServer(String sServerName, CLog log)
     {
-        super( sServerName);
+        super( sServerName, log);
         try
         {
             
@@ -45,14 +46,15 @@ public abstract class CBluetoothControlServer extends CSockectControlServer
             int randomNum = rand.nextInt((9999 -1) + 1) + 1;
             
             m_sServerName = sServerName;
-            System.out.println("inicializamos datos");         
+            m_log.write("inicializamos datos BlueTooth");         
             
             m_ServerUUID = new UUID( String.valueOf(randomNum) ,true);
             m_sServerURL  =  "btspp://localhost:" + m_ServerUUID+ ";name=" + m_sServerName ;                        
+                 
         }
         catch(Exception e)
         {
-          e.printStackTrace();                                
+          m_log.excepcion(e);                                
         }
     }
        
@@ -63,32 +65,60 @@ public abstract class CBluetoothControlServer extends CSockectControlServer
             m_DispositivoLocal.setDiscoverable(DiscoveryAgent.GIAC);
         }
         catch (BluetoothStateException ex)
-        {            
+        { 
+            m_log.excepcion(ex);                                
         }
     }
                
-    private void creaConexion()
+    protected void creaConexion()
     {
         try
         {                       
-            System.out.println("Nos ponemos en modo activo");
+            m_log.write("Nos ponemos en modo activo");
             m_DispositivoLocal = LocalDevice.getLocalDevice();
-            activaVisivilidad();
-                        
-            System.out.println("Iniciamos server");
+                                    
+            m_log.write("Iniciamos server");
             ///TODO Moverlo a otro lado un hilo aparte
-            m_localServer = (StreamConnectionNotifier)Connector.open(m_sServerURL);
-            m_conexionCliente = m_localServer.acceptAndOpen();
             
-            System.out.println("Cliente conectado");                            
-            
-            creaBufferStream( m_conexionCliente.openInputStream(), m_conexionCliente.openOutputStream() );            
-            
-            Run();                                   
+            CBtListener btListener = new CBtListener(m_sServerName);
+            btListener.start();
+                    
         }
         catch(Exception e)
         {
-          e.printStackTrace();                                
+          m_log.excepcion(e);                                                               
         }        
-    }     
+    } 
+    
+    
+    class CBtListener extends Thread
+    {
+        public CBtListener(String sServerName)
+        {
+            super(sServerName + "_Listener");
+        }
+        
+        @Override  public void run()
+        {
+            try
+            {
+                
+                    while(m_conexionCliente == null)
+                    {
+                        m_localServer = (StreamConnectionNotifier)Connector.open(m_sServerURL);
+                        m_conexionCliente = m_localServer.acceptAndOpen();
+                        activaVisivilidad();
+                    }    
+                    
+                    m_log.write("Cliente conectado");                                        
+                    creaBufferStream( m_conexionCliente.openInputStream(), m_conexionCliente.openOutputStream() );                       
+                    Run();                                          
+            }
+            catch (Exception ex)
+            {
+               m_log.excepcion(ex);
+            }
+        }
+        
+    }
 }

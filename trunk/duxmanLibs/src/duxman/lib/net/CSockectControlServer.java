@@ -9,6 +9,7 @@ package duxman.lib.net;
  *
  * @author aduce
  */
+import duxman.lib.log.CLog;
 import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
@@ -21,17 +22,17 @@ public abstract class CSockectControlServer extends CSockectControl
   private Socket                m_socket;
   private String                m_sUsuarioConectado;
     
-  public CSockectControlServer(String sServerName, int iPuertoConexion )
+  public CSockectControlServer(String sServerName, int iPuertoConexion, CLog log )
   {
-    super( sServerName );   
+    super( sServerName, log );   
     m_iPuertoConexion = iPuertoConexion;
     
   }
   
           
-  public CSockectControlServer(String sServerName )
+  public CSockectControlServer(String sServerName, CLog log )
   {
-    super( sServerName );
+    super( sServerName, log );
     try
     {      
   
@@ -39,7 +40,7 @@ public abstract class CSockectControlServer extends CSockectControl
     }
     catch (Exception ex)
     {
-      Logger.getLogger (CSockectControlServer.class.getName()).log (Level.SEVERE, null, ex);
+      m_log.excepcion(ex);
     }
   }
    
@@ -49,14 +50,13 @@ public abstract class CSockectControlServer extends CSockectControl
     try
     {
       m_serverSocket  = new ServerSocket ( m_iPuertoConexion );
-      m_socket        = new Socket();      
-      m_socket = m_serverSocket.accept ();
-      m_sUsuarioConectado = m_socket.getRemoteSocketAddress ().toString ();
-      creaBufferStream( m_socket );
+      m_socket        = new Socket();           
+      CNetListener netListener = new CNetListener(m_sServerName);
+      netListener.start();
     }
     catch(Exception e)
     {
-       e.printStackTrace ();
+      m_log.excepcion(e);
     }
   }
       
@@ -75,18 +75,44 @@ public abstract class CSockectControlServer extends CSockectControl
     }
     catch (Exception ex)
     {
-      Logger.getLogger (CSockectControlServer.class.getName()).log (Level.SEVERE, null, ex);
+      m_log.excepcion(ex);
     }
     return rtn;
   }
-  
-  
   
   private boolean condicionSalida()
   {
     boolean rtn;
     rtn = m_socket.isConnected () && !( getSalir () ); 
     return rtn;
+  }
+  
+  class CNetListener extends Thread
+  {
+      public CNetListener(String sServerName)
+      {
+          super(sServerName);          
+      }
+      
+      @Override  public void run()
+      {
+          try
+          {
+              synchronized(m_socket)
+              {
+                m_socket = m_serverSocket.accept ();
+                m_sUsuarioConectado = m_socket.getRemoteSocketAddress ().toString ();
+                creaBufferStream( m_socket );
+                Run();
+              }
+          }
+          catch (Exception ex)
+          {
+              Logger.getLogger(CSockectControlServer.class.getName()).log(Level.SEVERE, null, ex);
+          }
+      }
+              
+      
   }
   
   public abstract boolean compruebaFinal(String sDato);

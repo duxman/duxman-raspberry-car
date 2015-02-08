@@ -6,22 +6,17 @@ import java.util.List;
 import duxman.lib.log.CLog;
 import duxman.lib.util.CDatosComunes;
 
-public class CDato implements CDatosComunes
-{
-	public String Dato;
-	public int Origen;
-	public int Destino;
-	public int Id;
-	public int Accion;
-	private String ParametrosUnidos;
+public class CDato extends CDatoProvider implements CDatosComunes
+{	
 	public List<String> Parametros;
 	public eEstadoDato Estado;
 	/***
 	 * Constructor de la clase creamos la colección sincronizada
 	 */
-	public CDato()
+	public CDato(CLog log)
 	{
-		Parametros = Collections.synchronizedList( new ArrayList<String>(  ) );
+            super(log);
+            Parametros = Collections.synchronizedList( new ArrayList<String>(  ) );
 	}	
 	/***
 	 * Codifica el mensaje desde los datos instroducidos
@@ -30,10 +25,10 @@ public class CDato implements CDatosComunes
 	public String CodificaMensaje()
 	{
 		StringBuffer sRtn = new StringBuffer();
-		sRtn.append(String.format("%04d", Id));
-		sRtn.append(String.format("%04d", Origen));
-		sRtn.append(String.format("%04d", Destino));
-		sRtn.append(String.format("%04d", Accion));
+		sRtn.append(String.format("%04d", getId()));
+		sRtn.append(String.format("%04d", getOrigen()));
+		sRtn.append(String.format("%04d", getDestino()));
+		sRtn.append(String.format("%04d", getAccion()));
 		sRtn.append(CodificarParametros());
 		return sRtn.toString();
 	}
@@ -44,11 +39,11 @@ public class CDato implements CDatosComunes
 	
 	public void DescodificaMensaje()
 	{
-		Id	= Integer.parseInt( Dato.substring(POS_ID * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * ( POS_ID + 1) ) );
-		Origen = Integer.parseInt( Dato.substring(POS_ORIGEN * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * ( POS_ORIGEN + 1) ) );
-		Destino = Integer.parseInt( Dato.substring(POS_DESTINO * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * ( POS_DESTINO + 1))  );
-		Accion = Integer.parseInt( Dato.substring(POS_ACCION * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * ( POS_ACCION + 1) ) );
-		ParametrosUnidos = Dato.substring(12, Dato.length()); 
+		setId(      Integer.parseInt( getDato().substring(POS_ID * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * ( POS_ID + 1) ) ) );
+		setOrigen(  Integer.parseInt( getDato().substring(POS_ORIGEN * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * ( POS_ORIGEN + 1) ) ) );
+		setDestino( Integer.parseInt( getDato().substring(POS_DESTINO * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * ( POS_DESTINO + 1))  ) );
+		setAccion(  Integer.parseInt( getDato().substring(POS_ACCION * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * ( POS_ACCION + 1) ) ));
+		setParametrosUnidos (getDato().substring(12, getDato().length()) ); 
 		DescodificaParametros();
 	}
 	/***
@@ -58,7 +53,7 @@ public class CDato implements CDatosComunes
 	{
 		synchronized (Parametros) 
 		{
-			String[] aParametros = ParametrosUnidos.split(DIVISOR_PARAMETROS);
+			String[] aParametros = getParametrosUnidos().split(DIVISOR_PARAMETROS);
 			for (String par : aParametros) 
 			{
 				Parametros.add( par );
@@ -91,4 +86,10 @@ public class CDato implements CDatosComunes
 		
 		return sRtn;
 	}
+
+    @Override
+    public void ProcesaDato()
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

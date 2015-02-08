@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="DuxmanLibs" default="ALL" basedir=".">
+<project name="DuxmanCar" default="ALL" basedir=".">
   <property file="buildCI.properties" />
   <property name="src_dir"            value="src"/>    			
   <property name="dist_dir"           value="dist"/>    			  
@@ -40,8 +40,8 @@
             includeantruntime="false"
             deprecation="false" 
             fork="true"				
-            debug="false"
-   >	     
+            debug="true" 
+            >  	     
      <classpath >
        <fileset dir="./lib" includes="**/*.jar"/>        
      </classpath>
@@ -51,10 +51,20 @@
       <fileset dir="${build_dir}" excludes="**/*.properties;**/*.xml" />
       <manifest>				
         <attribute name="Built-Date" value="${TODAY}"/>												
-        <attribute name="Class-Path" value="${Build_classpath}"/>						
-			</manifest>
+        <attribute name="Class-Path" value="${dist_dir}/${ant.project.name}.jar  lib/log4j-1.2.17.jar lib/bluecove-gpl-2.1.0.jar lib/bluecove-2.1.0.jar lib/pi4j-core.jar"/>						
+         <attribute name="Main-Class" value="duxmancar.DuxmanCar"/>        
+      </manifest>
     </jar>
-    
+   
+    <jar destfile="${dist_dir}/${ant.project.name}_test.jar">
+      <fileset dir="${build_dir}" excludes="**/*.properties;**/*.xml" />
+      <manifest>				
+        <attribute name="Built-Date" value="${TODAY}"/>												
+        <attribute name="Class-Path" value="${dist_dir}/${ant.project.name}_test.jar  lib/log4j-1.2.17.jar lib/bluecove-gpl-2.1.0.jar lib/bluecove-2.1.0.jar lib/pi4j-core.jar"/>						
+         <attribute name="Main-Class" value="duxmancar.ServoTest"/>        
+      </manifest>
+    </jar>
+     
    <copy todir="${dist_dir}/lib">
        <fileset dir="./lib" includes="**/*.jar"/>        
    </copy>
