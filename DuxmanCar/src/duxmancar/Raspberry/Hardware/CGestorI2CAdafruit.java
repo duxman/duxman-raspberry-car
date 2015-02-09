@@ -3,13 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Paquetes.Raspberry.Hardware;
+package duxmancar.Raspberry.Hardware;
 
 import com.pi4j.io.i2c.I2CBus;
-import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
-import static duxmancar.ServoTest.bus;
-import duxmancar.lib.util.IDatosI2C;
+import duxmancar.util.IDatosI2C;
 import java.io.IOException;
 import org.apache.log4j.Logger;
 
@@ -20,25 +18,25 @@ import org.apache.log4j.Logger;
 public class CGestorI2CAdafruit implements IDatosI2C
 {
 
-    private CGestorI2CSincronizado gestorI2C;    
+    private CGestorI2CSincronizado gestorI2C;
     private int m_frecuenciaI2C;
     private final Logger m_log;
     private I2CBus bus;
 
     public CGestorI2CAdafruit(int iPuertoI2C, int iFrecuencia) throws IOException
-    {               
+    {
         m_log = Logger.getRootLogger();
-        
-        m_log.info("Inicializamos BUS I2C" );
+
+        m_log.info("Inicializamos BUS I2C");
         bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version 
-        
+
         m_log.info("Inicializamos dispositivo");
-        
-        gestorI2C = new CGestorI2CSincronizado( bus.getDevice(iPuertoI2C) );
-        
-        m_log.info("Configuramos dispositivo");        
+
+        gestorI2C = new CGestorI2CSincronizado(bus.getDevice(iPuertoI2C));
+
+        m_log.info("Configuramos dispositivo");
         gestorI2C.write(MODE1, (byte) 0x00);
-        
+
         m_log.info("Asignamos la frecuencia al dispositivo");
         setPWMFreq(iFrecuencia);
     }
@@ -129,7 +127,7 @@ public class CGestorI2CAdafruit implements IDatosI2C
         pulseLength /= m_frecuenciaI2C;  // 40..1000 Hz
         pulseLength /= 4096;       // 12 bits of resolution
         int pulse = (int) (pulseMS * 1000);
-        pulse /= pulseLength;       
+        pulse /= pulseLength;
         this.setPWM(channel, 0, pulse);
     }
 

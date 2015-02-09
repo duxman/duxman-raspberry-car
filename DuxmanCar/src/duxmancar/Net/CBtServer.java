@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Paquetes.Net;
+package duxmancar.Net;
 
 import java.util.Random;
 import javax.bluetooth.DiscoveryAgent;
@@ -21,18 +21,17 @@ import org.apache.log4j.Logger;
 public class CBtServer extends CSocketServer
 {
 
-
     private UUID m_ServerUUID = null;
     private String m_sServerURL = "";
     private StreamConnectionNotifier m_localServer = null;
     private StreamConnection m_conexionCliente = null;
-    private LocalDevice m_DispositivoLocal = null;    
-    
-    public CBtServer(String sServerName ) throws Exception
+    private LocalDevice m_DispositivoLocal = null;
+
+    public CBtServer(String sServerName) throws Exception
     {
         super(sServerName + "_hilo_principal");
 
-        m_log = Logger.getRootLogger( );
+        m_log = Logger.getRootLogger();
         m_sServerName = sServerName;
 
         m_log.info("inicializamos datos BlueTooth");
@@ -43,34 +42,34 @@ public class CBtServer extends CSocketServer
         m_log.info("UUIID:" + m_ServerUUID.toString());
 
         m_sServerURL = "btspp://localhost:" + m_ServerUUID + ";name=" + m_sServerName;
-        m_log.info("URL :" + m_sServerURL);     
-         
-        setConectado( Boolean.FALSE);
-        setSalir( Boolean.FALSE );        
-    } 
+        m_log.info("URL :" + m_sServerURL);
+
+        setConectado(Boolean.FALSE);
+        setSalir(Boolean.FALSE);
+    }
 
     @Override public void run()
     {
-        while ( getSalir() == false )
+        while (getSalir() == false)
         {
             try
-            {               
+            {
                 activaBT();
-                
+
                 m_log.info("Esperando conexion");
-                m_conexionCliente = m_localServer.acceptAndOpen();                                                
+                m_conexionCliente = m_localServer.acceptAndOpen();
                 m_log.info("Comenzamos proceso");
-                setConectado( Boolean.TRUE );
-                
-                while ( getSalir() == false )
-                {                    
+                setConectado(Boolean.TRUE);
+
+                while (getSalir() == false)
+                {
                     m_log.info("Cliente conectado, obtenemos conexiones");
                     creaBufferStream(m_conexionCliente.openInputStream(), m_conexionCliente.openOutputStream());
 
                     EsperaSalir();
                 }
-                
-                setConectado( Boolean.FALSE );
+
+                setConectado(Boolean.FALSE);
             }
             catch (Exception ex)
             {
@@ -96,15 +95,15 @@ public class CBtServer extends CSocketServer
         {
             m_log.info("Activamos BT");
             m_DispositivoLocal.setDiscoverable(DiscoveryAgent.GIAC);
-            m_log.info("Iniciamos Listener");                                    
+            m_log.info("Iniciamos Listener");
         }
         catch (Exception ex)
         {
             m_log.error(ex);
         }
-    }   
+    }
 
-    @Override  public void initServer()
+    @Override public void initServer()
     {
         try
         {
@@ -116,8 +115,8 @@ public class CBtServer extends CSocketServer
         }
         catch (Exception ex)
         {
-           m_log.error(ex);
+            m_log.error(ex);
         }
     }
-   
+
 }

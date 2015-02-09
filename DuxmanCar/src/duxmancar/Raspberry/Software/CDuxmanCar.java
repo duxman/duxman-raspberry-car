@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Paquetes.Raspberry.Software;
+package duxmancar.Raspberry.Software;
 
-import duxmancar.Paquetes.Datos.CDato;
-import duxmancar.Paquetes.Datos.Procesadores.CServoControl;
-import duxmancar.Paquetes.Net.CBtServer;
-import duxmancar.Paquetes.Net.CNetServer;
-import duxmancar.Paquetes.Raspberry.Hardware.CGestorI2CAdafruit;
-import duxmancar.lib.util.IDatosGenerales;
+import duxmancar.Datos.CDato;
+import duxmancar.Datos.Procesadores.CServoControl;
+import duxmancar.Net.CBtServer;
+import duxmancar.Net.CNetServer;
+import duxmancar.Raspberry.Hardware.CGestorI2CAdafruit;
+import duxmancar.util.IDatosGenerales;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

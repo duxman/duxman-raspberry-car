@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Paquetes.Net;
+package duxmancar.Net;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -14,23 +14,22 @@ import org.apache.log4j.Logger;
  *
  * @author duxman
  */
-public class CNetServer extends  CSocketServer
+public class CNetServer extends CSocketServer
 {
-    
+
     ServerSocket m_server;
-    Socket       m_socket;
-    int          m_iPuerto;
-    
-    public CNetServer( String sServerName, int iPuertoConexion) throws Exception
+    Socket m_socket;
+    int m_iPuerto;
+
+    public CNetServer(String sServerName, int iPuertoConexion) throws Exception
     {
-        super( sServerName );            
+        super(sServerName);
         m_log = Logger.getRootLogger();
         m_iPuerto = iPuertoConexion;
-        
-        
+
     }
-    
-    @Override  public void initServer()
+
+    @Override public void initServer()
     {
         try
         {
@@ -40,30 +39,30 @@ public class CNetServer extends  CSocketServer
         }
         catch (IOException ex)
         {
-           m_log.error(ex);
+            m_log.error(ex);
         }
     }
-    
-    @Override   public void run()
+
+    @Override public void run()
     {
-        while ( getSalir() == false )
+        while (getSalir() == false)
         {
             try
             {
-                m_log.info("Esperando conexion en puerto " + String.valueOf(m_iPuerto)); 
+                m_log.info("Esperando conexion en puerto " + String.valueOf(m_iPuerto));
                 m_socket = m_server.accept();
                 m_log.info("Comenzamos proceso Socket Red");
-                setConectado( Boolean.TRUE );
-                
-                while ( getSalir() == false )
-                {                    
+                setConectado(Boolean.TRUE);
+
+                while (getSalir() == false)
+                {
                     m_log.info("Cliente conectado, obtenemos conexiones de red");
                     creaBufferStream(m_socket.getInputStream(), m_socket.getOutputStream());
 
                     EsperaSalir();
                 }
-                
-                setConectado( Boolean.FALSE );
+
+                setConectado(Boolean.FALSE);
             }
             catch (Exception ex)
             {
@@ -80,8 +79,8 @@ public class CNetServer extends  CSocketServer
                     m_log.error(ex1);
                 }
             }
-        } 
-        
-    }       
-    
+        }
+
+    }
+
 }

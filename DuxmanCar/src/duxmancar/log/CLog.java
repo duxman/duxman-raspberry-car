@@ -1,4 +1,4 @@
-package duxmancar.lib.log;
+package duxmancar.log;
 
 /*
  * To change this template, choose Tools | Templates
@@ -45,7 +45,7 @@ public class CLog
         rootLogger.setLevel(Level.ALL);
         
         //Define log pattern layout
-        PatternLayout layout = new PatternLayout("[%d{yyyy-MM-dd HH:mm:ss,SSS}][%-5p][%C.%M (%L)]: [ %m ]%n");
+        PatternLayout layout = new PatternLayout("[%d{yyyy-MM-dd HH:mm:ss,SSS}][%-5p][%C.%M]: [ %m%n ]");
  
         //Add console appender to root logger
         rootLogger.addAppender(new ConsoleAppender(layout));
