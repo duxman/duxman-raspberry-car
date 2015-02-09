@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Paquetes.Datos;
+package duxmancar.Datos;
 
-import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
  *
  * @author duxman
  */
-public abstract class CDatoProvider 
+public abstract class CDatoProvider
 {
+
     private String Dato;
     private int Origen;
     private int Destino;
@@ -21,17 +21,17 @@ public abstract class CDatoProvider
     private int Accion;
     private String ParametrosUnidos;
     protected Logger m_log;
-    
+
     public CDatoProvider(String sDato)
     {
         m_log = Logger.getRootLogger();
         Dato = sDato;
         DescodificaMensaje();
     }
-    
 
-    public abstract void DescodificaMensaje();    
-    public abstract void DescodificaMensaje( String sDato );    
+    public abstract void DescodificaMensaje();
+
+    public abstract void DescodificaMensaje(String sDato);
 
     /**
      * @return the Dato

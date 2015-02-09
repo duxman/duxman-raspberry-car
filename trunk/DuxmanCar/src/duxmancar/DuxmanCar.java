@@ -6,13 +6,9 @@
 package duxmancar;
 
 import com.pi4j.io.i2c.I2CBus;
-import com.pi4j.io.i2c.I2CDevice;
-import com.pi4j.io.i2c.I2CFactory;
-import duxmancar.Paquetes.Datos.CProperties;
-import duxmancar.Paquetes.Raspberry.Hardware.CGestorI2CAdafruit;
-import duxmancar.Paquetes.Raspberry.Software.CDuxmanCar;
-import duxmancar.Paquetes.Raspberry.Hardware.CGestorI2CSincronizado;
-import duxmancar.lib.log.CLog;
+import duxmancar.Raspberry.Hardware.CGestorI2CAdafruit;
+import duxmancar.Raspberry.Software.CDuxmanCar;
+import duxmancar.log.CLog;
 import org.apache.log4j.Logger;
 
 /**
@@ -25,58 +21,64 @@ public class DuxmanCar
     /**
      * @param args the command line arguments
      */
-    static enum ESTADO_SERVICIO { START,STOP };
-    
+    static enum ESTADO_SERVICIO
+    {
+
+        START, STOP
+    };
+
     static CLog claselog;
     static ESTADO_SERVICIO m_estado;
     static Logger m_log;
-    
-    public static I2CBus    bus;
+
+    public static I2CBus bus;
     public static CGestorI2CAdafruit oControladorServos;
-    
-        
+    public static CProperties DuxmanCarProperties = null;
+
     public static void main(String[] args)
     {
         try
         {
+            DuxmanCarProperties = new CProperties("DuxmanCar.properties");
+
             m_estado = ESTADO_SERVICIO.START;
-            
-            claselog = new CLog(false, "/var/log/DuxmanCar.log", 10000, 3);
+
+            claselog = new CLog(false, CProperties.FICHERO_LOG, CProperties.MAX_SIZE_LOG, CProperties.MAX_FILES_LOG);
             m_log = Logger.getRootLogger();
-                                    
-            oControladorServos = new CGestorI2CAdafruit( CProperties.PUERTO_CONTROLADOR_SERVOS, CProperties.FREQ_CONTROLADOR_SERVOS);
-            
-            m_log.info("Inicio Aplicacion" );           
-            CDuxmanCar duxmanCar = new CDuxmanCar( oControladorServos );
+
+            oControladorServos = new CGestorI2CAdafruit(CProperties.PUERTO_CONTROLADOR_SERVOS, CProperties.FREQ_CONTROLADOR_SERVOS);
+
+            m_log.info("Inicio Aplicacion");
+            CDuxmanCar duxmanCar = new CDuxmanCar(oControladorServos);
             duxmanCar.init();
-            
+
             m_log.info("Creada clase principal");
-            
-            while(m_estado.equals(ESTADO_SERVICIO.START))
+
+            while (m_estado.equals(ESTADO_SERVICIO.START))
             {
                 try
                 {
-                    Thread.sleep(50000);                    
+                    Thread.sleep(50000);
                 }
                 catch (Exception ex)
                 {
-                    m_log.error( ex.getMessage() );
+                    m_log.error(ex.getMessage());
                 }
             }
             // TODO code application logic here
         }
         catch (Exception ex)
         {
-           m_log.error(ex);
+            m_log.error(ex);
         }
     }
-    
+
     public static void Salir()
     {
-        synchronized(m_estado)
+        synchronized (m_estado)
         {
             m_estado = ESTADO_SERVICIO.STOP;
         }
     }
-    
+
 }

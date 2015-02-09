@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Paquetes.Net;
+package duxmancar.Net;
 
-import duxmancar.lib.util.IDatosGenerales;
+import duxmancar.util.IDatosGenerales;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,7 +16,6 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -38,51 +36,53 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
     protected Logger m_log;
 
     protected String m_sServerName;
-    
+
     private List<String> m_listaMsg;
 
     public boolean compruebaFinal(String sDato)
     {
-        boolean rtn = false;        
+        boolean rtn = false;
         int iIndexINI;
         int iIndexFIN;
-        
-        if(sDato.endsWith(FIN_DATOS) && sDato.startsWith(INI_DATOS))
+
+        if (sDato.endsWith(FIN_DATOS) && sDato.startsWith(INI_DATOS))
+        {
             rtn = true;
+        }
         else
         {
             iIndexINI = sDato.indexOf(INI_DATOS);
-            if( iIndexINI >= 0 )
+            if (iIndexINI >= 0)
             {
                 iIndexFIN = sDato.indexOf(FIN_DATOS, iIndexINI);
-                if(iIndexFIN >= 0)
+                if (iIndexFIN >= 0)
                 {
-                    try 
+                    try
                     {
-                        String sDatoTemp = sDato.substring( iIndexINI, iIndexFIN );
-                        addMensajeEntrada( sDatoTemp );
-                        setDatosEntrada( sDato.substring(iIndexFIN+1), true );
+                        String sDatoTemp = sDato.substring(iIndexINI, iIndexFIN);
+                        addMensajeEntrada(sDatoTemp);
+                        setDatosEntrada(sDato.substring(iIndexFIN + 1), true);
                     }
-                    catch (Exception ex) 
+                    catch (Exception ex)
                     {
-                       m_log.error(ex);
+                        m_log.error(ex);
                     }
-                    
+
                 }
-            }            
-            
+            }
+
         }
-        
+
         return rtn;
     }
-   
-    public abstract void  initServer();
-    
+
+    public abstract void initServer();
+
     public void stopLectura()
     {
         m_hiloEntrada.interrupt();
     }
-    
+
     public CSocketServer(String sServerName)
     {
         super(sServerName);
@@ -90,7 +90,7 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
         m_bConectado = new Boolean(false);
         m_sDatosInput = "";
         m_sDatosOutput = "";
-        
+
         m_listaMsg = Collections.synchronizedList(new ArrayList<String>());
     }
 
@@ -103,7 +103,7 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
             m_hiloEntrada = new CHiloEntrada();
 
             m_log.info("Creada salida de fichero");
-            m_bfOutput = new BufferedWriter(new OutputStreamWriter( output ) );
+            m_bfOutput = new BufferedWriter(new OutputStreamWriter(output));
 
             m_hiloEntrada.start();
         }
@@ -209,27 +209,27 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
     }
 
     private synchronized void addMensajeEntrada(String sDato) throws Exception
-    {        
-        
-        while (m_listaMsg.size() == MAX_MENSAJES )
+    {
+
+        while (m_listaMsg.size() == MAX_MENSAJES)
         {
             wait();
         }
-        m_log.info("Añadido MSG :"  +sDato );
+        m_log.info("Añadido MSG :" + sDato);
         m_listaMsg.add(sDato);
-        notify();        
-    }
-    
-    public synchronized String getMensaje() throws Exception
-    {  
         notify();
-        while(m_listaMsg.size() == 0)
+    }
+
+    public synchronized String getMensaje() throws Exception
+    {
+        notify();
+        while (m_listaMsg.size() == 0)
         {
             wait();
         }
         String sRtn = m_listaMsg.get(0);
         m_listaMsg.remove(0);
-        return sRtn;                                       
+        return sRtn;
     }
 
     protected class CHiloEntrada extends Thread
