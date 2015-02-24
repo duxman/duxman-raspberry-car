@@ -14,6 +14,8 @@ public interface IDatosGenerales
     //Datos Generales
     static int NINGUNO = -1;
     
+    static int NUM_REPETICIONES_MULTICAST = 150;
+    
     //Datos conexion
     static enum TIPO_CONEXION { BLUE, NET, WS };
     

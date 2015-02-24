@@ -169,7 +169,7 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
 
     public void EsperaSalir() throws InterruptedException
     {
-        Thread.sleep(100000);
+        Thread.sleep(2000);
     }
 
     public void setDatosEntrada(String sDato)
