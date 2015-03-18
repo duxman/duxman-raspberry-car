@@ -1,0 +1,12 @@
+# Introduccion #
+
+El propósito general del proyecto es crear un vehículo teledirigido con una raspberry pi.
+Para ello vamos a probar distintas posibilidades en lo referente al control remoto, en la cuales probaremos técnicas de comunicación distintas como control Radio, Red-IP, Bluetooth, incluso intentaremos hacerlo a través de internet abriendo un WS con el cual podamos manejar desde un punto remoto el vehículo.
+
+También usaremos a nivel hardware distintas combinaciones, SPI, I2C, H-Bridge.. así como motores, Servos 360, DC, Step Motors. la finalidad es conseguir la mejor combinación así como la que nos de mas posibilidades de ampliación.
+
+toda la información y avances los publicaremos en esta wiki y ademas mantendremos un Blog [DuxCarBlog](http://duxcar.duxnet.com/blog/).
+
+el codigo esta pensado para ser abierto y de disposición publica para que todos podamos beneficiarnos.
+
+unos de los proyectos paralelos a esto sera intentar crear un emulador del puerto GPIO de raspberryPI.
