@@ -5,7 +5,10 @@
  */
 package duxmancar;
 
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.i2c.I2CBus;
+import duxmancar.Raspberry.Hardware.CGestorGPIO;
 import duxmancar.Raspberry.Hardware.CGestorI2CAdafruit;
 import duxmancar.Raspberry.Software.CDuxmanCar;
 import duxmancar.log.CLog;
@@ -32,7 +35,8 @@ public class DuxmanCar
     static Logger m_log;
 
     public static I2CBus bus;
-    public static CGestorI2CAdafruit oControladorServos;
+    public static CGestorI2CAdafruit oControladorServos;    
+    public static CGestorGPIO oGpio;
     public static CProperties DuxmanCarProperties = null;
 
     public static void main(String[] args)
@@ -47,7 +51,9 @@ public class DuxmanCar
             m_log = Logger.getRootLogger();
 
             oControladorServos = new CGestorI2CAdafruit(CProperties.PUERTO_CONTROLADOR_SERVOS, CProperties.FREQ_CONTROLADOR_SERVOS);
-
+            oGpio = new CGestorGPIO();
+                    
+            
             m_log.info("Inicio Aplicacion");
             CDuxmanCar duxmanCar = new CDuxmanCar(oControladorServos);
             duxmanCar.init();
