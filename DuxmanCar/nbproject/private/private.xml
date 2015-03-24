@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/Raspberry/Hardware/CGestorI2CSincronizado.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/Net/CBtServer.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/DuxmanCar.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/Net/CNetServer.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/ServoTest.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/Net/CSocketServer.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/Datos/CDato.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/Datos/Procesadores/CServoControl.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/Datos/Procesadores/CProcesadorDatosProvider.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/log/CLog.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/Raspberry/Hardware/CGestorI2CAdafruit.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/Datos/CDatoProvider.java</file>
+            <file>file:/home/duxman/GoogleDrive/netbeans/Duxman/Duxman-Raspberry-Car/DuxmanCar/src/duxmancar/Raspberry/Software/CDuxmanCar.java</file>
+        </group>
+    </open-files>
+</project-private>
