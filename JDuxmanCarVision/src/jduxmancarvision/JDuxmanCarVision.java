@@ -21,12 +21,15 @@ public class JDuxmanCarVision
     static CLog claselog;
     static Logger m_log;
     static JVision vision;
+    static JVentana ventana;
     public static void main(String[] args)
     {
         claselog =   new CLog(false, "DuxmanCarVision.log", 10000, 5);
         m_log = Logger.getRootLogger();        
-        vision = new JVision();
-        vision.init();        
+        vision = new JVision();                   
+        ventana = new JVentana( vision );
+        vision.setVentana( ventana );
+        
     }
     
 }
