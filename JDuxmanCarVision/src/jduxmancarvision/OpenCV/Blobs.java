@@ -1,4 +1,4 @@
-package jduxmancarvision;
+package jduxmancarvision.OpenCV;
 
 //***************************************************************//
 //* Blob analysis package  Version3.0 3 Oct 2012                *//
