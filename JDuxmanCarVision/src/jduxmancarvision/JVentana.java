@@ -7,6 +7,9 @@ package jduxmancarvision;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
@@ -28,27 +31,21 @@ public class JVentana extends javax.swing.JFrame
        initComponents();
         setTitle("Reconocimiento de Rostros mediante Webcam con OpenCV y Java");
         setLocation(10, 10);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(800,768);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);       
         setResizable(true);
         setVisible(true);
+        setSize(1024, 768);
         m_gestorCamara = gestorCamara;
         
     }
     
-    public void setImage(Image imagen)
+    public void setImage(Image imagen, JLabel etiqueta)
     {  
-        ImageIcon icon = new ImageIcon(imagen.getScaledInstance(480, 320, Image.SCALE_SMOOTH));
-        etiqueta1.setIcon(icon);    
-        panel.updateUI();
+        ImageIcon icon = new ImageIcon(imagen.getScaledInstance(320, 240, Image.SCALE_SMOOTH));
+        etiqueta.setIcon(icon);    
+        etiqueta.updateUI();
     }
-    
-    public void setImage2(Image imagen)
-    {  
-        ImageIcon icon = new ImageIcon(imagen.getScaledInstance(480, 320, Image.SCALE_SMOOTH));
-        etiqueta2.setIcon(icon);    
-        panel.updateUI();
-    }
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -59,67 +56,168 @@ public class JVentana extends javax.swing.JFrame
     private void initComponents()
     {
 
-        panel = new javax.swing.JPanel();
-        etiqueta1 = new javax.swing.JLabel();
-        etiqueta2 = new javax.swing.JLabel();
-        btnInit = new javax.swing.JButton();
-        btnCaras = new javax.swing.JButton();
+        lblImgIzq = new javax.swing.JLabel();
+        lblImgFinal = new javax.swing.JLabel();
+        lblImgIzqPro = new javax.swing.JLabel();
+        lblImgDer = new javax.swing.JLabel();
+        lblImgDerPro = new javax.swing.JLabel();
+        slideNormalizado = new javax.swing.JSlider();
+        jLabel4 = new javax.swing.JLabel();
+        esquinasX = new javax.swing.JSpinner();
+        esquinasY = new javax.swing.JSpinner();
+        spindisp = new javax.swing.JSpinner();
+        maxperpixel = new javax.swing.JSpinner();
+        EsquinasX = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        lblImgFinal2 = new javax.swing.JLabel();
+        thresholdType = new javax.swing.JComboBox();
+        ithresholdMin = new javax.swing.JSpinner();
+        EsquinasX1 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        ithresholdMax = new javax.swing.JSpinner();
+        iPunto = new javax.swing.JSpinner();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        iarea = new javax.swing.JSpinner();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        validate = new javax.swing.JSpinner();
+        texture = new javax.swing.JSpinner();
+        jLabel14 = new javax.swing.JLabel();
+        iwinrange = new javax.swing.JSpinner();
+        iwinsize = new javax.swing.JSpinner();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        imaxdiff = new javax.swing.JSpinner();
         jButton1 = new javax.swing.JButton();
-        jSpinner1 = new javax.swing.JSpinner();
-        jSpinner2 = new javax.swing.JSpinner();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        mindisp = new javax.swing.JSpinner();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        Calibrar3d = new javax.swing.JMenuItem();
+        CargarCalibracion = new javax.swing.JMenuItem();
+        test3d = new javax.swing.JMenuItem();
+        distancia = new javax.swing.JMenuItem();
+        objetos = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(22, 86, 224));
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setResizable(false);
 
-        etiqueta1.setText("jLabel1");
+        lblImgIzq.setToolTipText("");
+        lblImgIzq.setBorder(new javax.swing.border.MatteBorder(null));
+        lblImgIzq.setMaximumSize(new java.awt.Dimension(320, 240));
+        lblImgIzq.setMinimumSize(new java.awt.Dimension(320, 240));
+        lblImgIzq.setName(""); // NOI18N
+        lblImgIzq.setPreferredSize(new java.awt.Dimension(320, 240));
 
-        etiqueta2.setText("jLabel1");
+        lblImgFinal.setToolTipText("");
+        lblImgFinal.setBorder(new javax.swing.border.MatteBorder(null));
+        lblImgFinal.setMaximumSize(new java.awt.Dimension(320, 240));
+        lblImgFinal.setMinimumSize(new java.awt.Dimension(320, 240));
+        lblImgFinal.setName(""); // NOI18N
+        lblImgFinal.setPreferredSize(new java.awt.Dimension(320, 240));
 
-        javax.swing.GroupLayout panelLayout = new javax.swing.GroupLayout(panel);
-        panel.setLayout(panelLayout);
-        panelLayout.setHorizontalGroup(
-            panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(etiqueta2, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(etiqueta1, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(124, Short.MAX_VALUE))
-        );
-        panelLayout.setVerticalGroup(
-            panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(etiqueta1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(etiqueta2, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(97, Short.MAX_VALUE))
-        );
+        lblImgIzqPro.setToolTipText("");
+        lblImgIzqPro.setBorder(new javax.swing.border.MatteBorder(null));
+        lblImgIzqPro.setMaximumSize(new java.awt.Dimension(320, 240));
+        lblImgIzqPro.setMinimumSize(new java.awt.Dimension(320, 240));
+        lblImgIzqPro.setName(""); // NOI18N
+        lblImgIzqPro.setPreferredSize(new java.awt.Dimension(320, 240));
 
-        btnInit.setText("init");
-        btnInit.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                btnInitActionPerformed(evt);
-            }
-        });
+        lblImgDer.setToolTipText("");
+        lblImgDer.setBorder(new javax.swing.border.MatteBorder(null));
+        lblImgDer.setMaximumSize(new java.awt.Dimension(320, 240));
+        lblImgDer.setMinimumSize(new java.awt.Dimension(320, 240));
+        lblImgDer.setName(""); // NOI18N
+        lblImgDer.setPreferredSize(new java.awt.Dimension(320, 240));
 
-        btnCaras.setText("Caras");
-        btnCaras.setToolTipText("");
-        btnCaras.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                btnCarasActionPerformed(evt);
-            }
-        });
+        lblImgDerPro.setToolTipText("");
+        lblImgDerPro.setBorder(new javax.swing.border.MatteBorder(null));
+        lblImgDerPro.setMaximumSize(new java.awt.Dimension(320, 240));
+        lblImgDerPro.setMinimumSize(new java.awt.Dimension(320, 240));
+        lblImgDerPro.setName(""); // NOI18N
+        lblImgDerPro.setPreferredSize(new java.awt.Dimension(320, 240));
 
-        jButton1.setText("Detect");
-        jButton1.setToolTipText("");
+        slideNormalizado.setToolTipText("");
+        slideNormalizado.setValue(100);
+        slideNormalizado.setName(""); // NOI18N
+
+        jLabel4.setText("Normalizado");
+        jLabel4.setToolTipText("");
+
+        esquinasX.setValue(9);
+
+        esquinasY.setValue(6);
+
+        spindisp.setValue(21);
+
+        maxperpixel.setValue(25);
+
+        EsquinasX.setText("EsquinasX");
+        EsquinasX.setToolTipText("");
+
+        jLabel6.setText("EsquinasY");
+        jLabel6.setToolTipText("");
+
+        jLabel7.setText("disparidades");
+
+        jLabel8.setText("maxperPixel");
+
+        lblImgFinal2.setToolTipText("");
+        lblImgFinal2.setBorder(new javax.swing.border.MatteBorder(null));
+        lblImgFinal2.setMaximumSize(new java.awt.Dimension(320, 240));
+        lblImgFinal2.setMinimumSize(new java.awt.Dimension(320, 240));
+        lblImgFinal2.setName(""); // NOI18N
+        lblImgFinal2.setPreferredSize(new java.awt.Dimension(320, 240));
+
+        thresholdType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CV_THRESH_BINARY", "CV_THRESH_BINARY_INV", "CV_THRESH_TRUNC", "CV_THRESH_TOZERO", "CV_THRESH_TOZERO_INV", " " }));
+
+        ithresholdMin.setValue(100);
+
+        EsquinasX1.setText("ThresholdMin");
+        EsquinasX1.setToolTipText("");
+
+        jLabel9.setText("thresholdMax");
+        jLabel9.setToolTipText("");
+
+        ithresholdMax.setValue(255);
+
+        iPunto.setValue(3);
+
+        jLabel10.setText("Punto");
+
+        jLabel11.setText("Area");
+
+        iarea.setValue(1000);
+
+        jLabel12.setText("validate");
+
+        jLabel13.setText("texture");
+
+        validate.setValue(1);
+
+        texture.setValue(-1);
+
+        jLabel14.setText("winrange");
+
+        iwinrange.setValue(1);
+
+        iwinsize.setValue(1);
+
+        jLabel15.setText("WinSize");
+
+        jLabel16.setText("MaxDiff");
+
+        imaxdiff.setValue(60);
+
+        jButton1.setText("Calibrar Cams");
         jButton1.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -128,15 +226,7 @@ public class JVentana extends javax.swing.JFrame
             }
         });
 
-        jSpinner1.setValue(150);
-
-        jSpinner2.setValue(2);
-
-        jLabel1.setText("threshold");
-
-        jLabel2.setText("Size");
-
-        jButton2.setText("jButton2");
+        jButton2.setText("Calibrar Stereo");
         jButton2.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -145,8 +235,7 @@ public class JVentana extends javax.swing.JFrame
             }
         });
 
-        jButton3.setText("Detect 2");
-        jButton3.setToolTipText("");
+        jButton3.setText("Tomar Foto");
         jButton3.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -155,105 +244,410 @@ public class JVentana extends javax.swing.JFrame
             }
         });
 
+        jButton4.setText("Calibrar Fotos");
+        jButton4.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        mindisp.setValue(0);
+
+        jMenu1.setText("Camaras");
+        jMenu1.setToolTipText("");
+
+        jMenuItem1.setText("inicio");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        Calibrar3d.setText("Calibrar 3D");
+        Calibrar3d.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                Calibrar3dActionPerformed(evt);
+            }
+        });
+        jMenu1.add(Calibrar3d);
+
+        CargarCalibracion.setText("Cargar Calibracion");
+        CargarCalibracion.setToolTipText("");
+        CargarCalibracion.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                CargarCalibracionActionPerformed(evt);
+            }
+        });
+        jMenu1.add(CargarCalibracion);
+
+        test3d.setText("Test 3D");
+        test3d.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                test3dActionPerformed(evt);
+            }
+        });
+        jMenu1.add(test3d);
+
+        distancia.setText("Medir 3D");
+        distancia.setToolTipText("");
+        distancia.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                distanciaActionPerformed(evt);
+            }
+        });
+        jMenu1.add(distancia);
+
+        objetos.setText("objetos");
+        objetos.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                objetosActionPerformed(evt);
+            }
+        });
+        jMenu1.add(objetos);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                    .addComponent(lblImgIzq, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblImgIzqPro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblImgFinal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblImgDer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblImgDerPro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(slideNormalizado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
-                    .addComponent(btnInit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnCaras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinner2, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2)))
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(maxperpixel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(mindisp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel7)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spindisp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(esquinasY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(EsquinasX)
+                                        .addGap(50, 50, 50)
+                                        .addComponent(esquinasX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel13)
+                                            .addComponent(jLabel15)
+                                            .addComponent(jLabel14)
+                                            .addComponent(jLabel16)
+                                            .addComponent(jLabel12))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(texture, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(validate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(iwinrange, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(iwinsize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(imaxdiff, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(48, 48, 48))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblImgFinal2, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel11)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(iarea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel10)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(iPunto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(jLabel9)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(ithresholdMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(EsquinasX1)
+                                    .addGap(50, 50, 50)
+                                    .addComponent(ithresholdMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(thresholdType, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblImgFinal, lblImgIzq, lblImgIzqPro});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnInit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCaras)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
-                        .addGap(4, 4, 4)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblImgDer, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblImgDerPro, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblImgIzq, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblImgIzqPro, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(esquinasX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(EsquinasX)
+                                    .addComponent(jButton1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(esquinasY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel6))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(spindisp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel7)
+                                            .addComponent(mindisp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(maxperpixel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel8)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButton2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton4)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(validate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel12)
+                                    .addComponent(jButton3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(texture, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel13))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(iwinsize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel15))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(iwinrange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel14))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel16)
+                                    .addComponent(imaxdiff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(thresholdType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(ithresholdMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(EsquinasX1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(ithresholdMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(iPunto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel10))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(iarea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel11)))
+                            .addComponent(lblImgFinal2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(slideNormalizado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)))
+                    .addComponent(lblImgFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnInitActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnInitActionPerformed
-    {//GEN-HEADEREND:event_btnInitActionPerformed
-        m_gestorCamara.init();        // TODO add your handling code here:
-        m_gestorCamara.start();
-    }//GEN-LAST:event_btnInitActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem1ActionPerformed
+    {//GEN-HEADEREND:event_jMenuItem1ActionPerformed
+        m_gestorCamara.init();
+        m_gestorCamara.start();;
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void btnCarasActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnCarasActionPerformed
-    {//GEN-HEADEREND:event_btnCarasActionPerformed
-        m_gestorCamara.m_bCaras = !m_gestorCamara.m_bCaras;
-    }//GEN-LAST:event_btnCarasActionPerformed
+    private void Calibrar3dActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_Calibrar3dActionPerformed
+    {//GEN-HEADEREND:event_Calibrar3dActionPerformed
+        
+        m_gestorCamara.bCalibrar= !m_gestorCamara.bCalibrar;
+        if( m_gestorCamara.bCalibrar )
+        {
+            setTitle(" OpenCV 3D CALIBRANDO");
+            try
+            {
+                m_gestorCamara.CalibrarIndividual();
+            }
+            catch (IOException ex)
+            {
+                Logger.getLogger(JVentana.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            setTitle(" OpenCV 3D CALIBRANDO OK");
+        }
+        else
+        {
+            setTitle("OpenCV 3D");
+        }
+    }//GEN-LAST:event_Calibrar3dActionPerformed
+
+    private void CargarCalibracionActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_CargarCalibracionActionPerformed
+    {//GEN-HEADEREND:event_CargarCalibracionActionPerformed
+        m_gestorCamara.CargarCalibracion();
+    }//GEN-LAST:event_CargarCalibracionActionPerformed
+
+    private void test3dActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_test3dActionPerformed
+    {//GEN-HEADEREND:event_test3dActionPerformed
+        m_gestorCamara.b3d = ! m_gestorCamara.b3d;        
+    }//GEN-LAST:event_test3dActionPerformed
+
+    private void objetosActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_objetosActionPerformed
+    {//GEN-HEADEREND:event_objetosActionPerformed
+        m_gestorCamara.bobjetos =  ! m_gestorCamara.bobjetos;
+    }//GEN-LAST:event_objetosActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
     {//GEN-HEADEREND:event_jButton1ActionPerformed
-        m_gestorCamara.m_bDetectar = !m_gestorCamara.m_bDetectar;
+        m_gestorCamara.bCalibrar= !m_gestorCamara.bCalibrar;
+        if( m_gestorCamara.bCalibrar )
+        {
+            setTitle(" OpenCV 3D CALIBRANDO");
+            try
+            {
+                m_gestorCamara.CalibrarIndividual();
+            }
+            catch (IOException ex)
+            {
+                
+            }
+            setTitle(" OpenCV 3D CALIBRANDO OK");
+        }
+        else
+        {
+            setTitle("OpenCV 3D");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton2ActionPerformed
     {//GEN-HEADEREND:event_jButton2ActionPerformed
-        
-        m_gestorCamara.m_ithresholValue = ( (Integer) jSpinner1.getValue() ).intValue();
-        m_gestorCamara.m_isizeValue = ( (Integer) jSpinner2.getValue() ).intValue();
+       m_gestorCamara.CalibrarEstero();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton4ActionPerformed
+    {//GEN-HEADEREND:event_jButton4ActionPerformed
+
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void distanciaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_distanciaActionPerformed
+    {//GEN-HEADEREND:event_distanciaActionPerformed
+        m_gestorCamara.distancia();
+    }//GEN-LAST:event_distanciaActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton3ActionPerformed
     {//GEN-HEADEREND:event_jButton3ActionPerformed
-       m_gestorCamara.m_bDetectar2 = !m_gestorCamara.m_bDetectar2;
+
+        m_gestorCamara.tomarfotos2("imagenderecha.png", "imagenizquierda.png");// m_gestorCamara.tomarfotos();
+        
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCaras;
-    private javax.swing.JButton btnInit;
-    private javax.swing.JLabel etiqueta1;
-    private javax.swing.JLabel etiqueta2;
+    private javax.swing.JMenuItem Calibrar3d;
+    private javax.swing.JMenuItem CargarCalibracion;
+    private javax.swing.JLabel EsquinasX;
+    private javax.swing.JLabel EsquinasX1;
+    private javax.swing.JMenuItem distancia;
+    public javax.swing.JSpinner esquinasX;
+    public javax.swing.JSpinner esquinasY;
+    public javax.swing.JSpinner iPunto;
+    public javax.swing.JSpinner iarea;
+    public javax.swing.JSpinner imaxdiff;
+    public javax.swing.JSpinner ithresholdMax;
+    public javax.swing.JSpinner ithresholdMin;
+    public javax.swing.JSpinner iwinrange;
+    public javax.swing.JSpinner iwinsize;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
-    private javax.swing.JPanel panel;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    public javax.swing.JLabel lblImgDer;
+    public javax.swing.JLabel lblImgDerPro;
+    public javax.swing.JLabel lblImgFinal;
+    public javax.swing.JLabel lblImgFinal2;
+    public javax.swing.JLabel lblImgIzq;
+    public javax.swing.JLabel lblImgIzqPro;
+    public javax.swing.JSpinner maxperpixel;
+    public javax.swing.JSpinner mindisp;
+    private javax.swing.JMenuItem objetos;
+    public javax.swing.JSlider slideNormalizado;
+    public javax.swing.JSpinner spindisp;
+    private javax.swing.JMenuItem test3d;
+    public javax.swing.JSpinner texture;
+    public javax.swing.JComboBox thresholdType;
+    public javax.swing.JSpinner validate;
     // End of variables declaration//GEN-END:variables
 }

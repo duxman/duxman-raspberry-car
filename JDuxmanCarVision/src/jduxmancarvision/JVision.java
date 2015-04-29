@@ -5,36 +5,28 @@
  */
 package jduxmancarvision;
 
-import jduxmancarvision.OpenCV.Blobs;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.io.PrintWriter;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfRect;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
-import static org.opencv.highgui.Highgui.CV_CAP_PROP_FRAME_HEIGHT;
-import static org.opencv.highgui.Highgui.CV_CAP_PROP_FRAME_WIDTH;
-import org.opencv.highgui.VideoCapture;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.objdetect.CascadeClassifier;
-import org.opencv.video.BackgroundSubtractorMOG;
-import org.opencv.video.BackgroundSubtractorMOG2;
-
+import jduxmancarvision.OpenCV.*;
+import org.opencv.core.Core;
 /**
  *
  * @author duxman
@@ -42,42 +34,30 @@ import org.opencv.video.BackgroundSubtractorMOG2;
 public class JVision extends Thread
 {
     Logger m_log;
-    VideoCapture camera;    
+    CCamaraStereo camaras;
+    Size m_partner;
     JVentana ventana;
-    Mat imagen0;
-    Mat imagen1;
-    Mat imagen;
-    Mat imagenTMP;
-    public boolean m_bCaras;
-    public boolean m_bDetectar;
-    public boolean m_bDetectar2;
-    
-     CascadeClassifier faceDetector1;
-     CascadeClassifier faceDetector2;
-     CascadeClassifier faceDetector3;
-     MatOfRect faceDetections;
-     public int m_ithresholValue;
-     public int m_isizeValue;
-     Random r;
-     BackgroundSubtractorMOG back;
-
+    boolean bCalibrar;
+    boolean b3d;
+    boolean bobjetos;
+    static int inum;
+    PrintWriter lista;
     public JVision()
     {       
-        m_log = Logger.getRootLogger();   
-        m_bCaras = false;        
-        m_bDetectar = false;  
-        r = new Random();
+      m_log = Logger.getRootLogger();      
+      bobjetos= false;
     }
     
     public void setVentana( JVentana v )
     {
-        ventana = v;
+       ventana = v;
     }
     
     public void init(  )
     {
         try
-        {
+        {   
+            inum = 0;
             m_log.info("Inicializamos opencv");
             // Load the native library.
             System.load("/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/dist/lib/libopencv_java2410.so" );                        
@@ -91,81 +71,178 @@ public class JVision extends Thread
     
     public void inicializaVideo() throws InterruptedException
     {               
-        camera = new VideoCapture(0);        
+        camaras = new CCamaraStereo( m_partner );                                
         
-        boolean a = camera.set(CV_CAP_PROP_FRAME_WIDTH,320);
-        boolean b = camera.set(CV_CAP_PROP_FRAME_HEIGHT,240);
-        m_log.info(a);
-        m_log.info(b);
-        
-        
-        
-        Thread.sleep(10000);
-               
-        if(!camera.isOpened())
+        if(camaras.iniciaCamaras() == 1)
         {
-           m_log.info("Camera Error");
+           m_log.info("Camera OK?");
         }
         else
-        {
-            imagen0 = new Mat(); 
-            imagen1 = new Mat(); 
-            imagen = new Mat(); 
-            imagenTMP = new Mat(); 
-            initRunFace();
-            
-            m_log.info("Camera OK?");
+        {                                   
+            m_log.info("Camera Error");
         }        
     }
     
-    public void initRunFace()
+    public void CargarCalibracion()
     {
-        faceDetector1 = new CascadeClassifier();
-        faceDetector2 = new CascadeClassifier();
-        faceDetector3 = new CascadeClassifier();
-        faceDetections = new MatOfRect();            
-        
-        if( !faceDetector1.load("/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/dist/lbpcascade_frontalface.xml")) 
-            m_log.error("no se puede leer lbpcascade_frontalface");
-
-        if( !faceDetector2.load("/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/dist/lbpcascade_profileface.xml"))
-            m_log.error("no se puede leer lbpcascade_profileface");
-
-        if( !faceDetector3.load("/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/dist/lbpcascade_silverware.xml"))
-            m_log.error("no se puede leer lbpcascade_silverware");
+        camaras.cargarCalibracion();        
     }
+       
+    
+    public void procesar3d()
+    {
+      int imindisp =( ( Integer) ventana.mindisp.getValue()).intValue();
+      int imaxdisp =( ( Integer) ventana.spindisp.getValue()).intValue()*10;
+      int maxperpixel =( ( Integer) ventana.maxperpixel.getValue()).intValue();
+      int validate =( ( Integer) ventana.validate.getValue()).intValue();
+      double texture =( ( Integer) ventana.texture.getValue()).doubleValue();
+      texture  = (texture<0)?(-texture/10):(texture);
+              
+      
+      /*int isad =( ( Integer) ventana.spinsombras.getValue()).intValue();
+      
+      int iPrefilterCap =( ( Integer) ventana.iprefiltersize.getValue()).intValue();
+      int iuniqueratio =( ( Integer) ventana.iuniqueratio.getValue()).intValue();
+      int ispecksize =( ( Integer) ventana.iwinsize.getValue()).intValue();
+      int ispeckrange =( ( Integer) ventana.iwinrange.getValue()).intValue();
+      int imaxdiff =( ( Integer) ventana.imaxdiff.getValue()).intValue();
+      
+      Mat m = camaras.procesarImagen3d(imindisp,idisp, isad,iPrefilterCap, iuniqueratio, ispecksize, ispeckrange, imaxdiff );
+      
+      if(m.empty() == false )
+      {
+          ventana.setImage( convertir(camaras.m_imagenRectificadaDerecha) , ventana.lblImgDerPro);
+          ventana.setImage( convertir(camaras.m_imagenRectificadaIzquierda) , ventana.lblImgIzqPro);
+          ventana.setImage( convertir(m) , ventana.lblImgFinal);
+          ventana.setImage( convertir(camaras.m_DisparidadProcesada) , ventana.lblImgFinal2);
+      }    */
+      
+      
+      Mat m = camaras.procesarImagen3d(imindisp,imaxdisp, maxperpixel,validate, texture );
+      
+      if(m.empty() == false )
+      {
+          ventana.setImage( convertir(camaras.m_imagenRectificadaDerecha) , ventana.lblImgDerPro);
+          ventana.setImage( convertir(camaras.m_imagenRectificadaIzquierda) , ventana.lblImgIzqPro);
+          ventana.setImage( convertir(m) , ventana.lblImgFinal);          
+      }  
+      
+    }
+    public void tomarfoto3()
+    {
+        Highgui.imwrite("imgrgb.ppm", camaras.camaraDerecha().dameImagen());
+        Highgui.imwrite("disparidad.pgm", camaras.m_DisparidadProcesada);
+    }
+    
+   
+    
+    public void procesarObjetos()
+    {
+       int iTresMin =  ( (Integer) ventana.ithresholdMin.getValue()).intValue();
+       int iTresMax =  ( (Integer) ventana.ithresholdMax.getValue()).intValue();
+       int iThresType =  ventana.thresholdType.getSelectedIndex();
+       int iPunto =  ( (Integer) ventana.iPunto.getValue()).intValue();
+       int iarea =   ( (Integer) ventana.iarea.getValue()).intValue();
+       
+      camaras.detectarObjetos(iTresMin, iTresMax, iThresType, iPunto, iarea);      
+      
+      ventana.setImage( convertir(camaras.camaraDerecha().dameImagen()) , ventana.lblImgIzqPro);
+      ventana.setImage( convertir(camaras.camaraIzquierda().dameImagen()) , ventana.lblImgDerPro);            
+      
+      ventana.setImage(convertir(camaras.camaraDerecha().dameUltimaImagenProcesada()),ventana.lblImgFinal);
+      ventana.setImage(convertir(camaras.camaraIzquierda().dameUltimaImagenProcesada()),ventana.lblImgFinal2);
+    }
+    
+    public void  CalibrarIndividual() throws IOException
+    {
+      if( lista == null )
+      {
+          lista = new PrintWriter("imagenes/list.txt") ;
+      }
+      
+      int esqX=((Integer)ventana.esquinasX.getValue()).intValue();
+      int esqY=((Integer)ventana.esquinasY.getValue()).intValue();
+      Size partnerSize = new Size(esqX,esqY );
+      boolean ret = camaras.calibrarIndividual( partnerSize );
+      if(ret == true )
+      {
+        String Der,Izq;
+        Der = "imagenes/der"+inum+".ppm";
+        Izq = "imagenes/izq"+inum+".ppm";
+        inum++;                
+        
+        lista.write(Der);
+        lista.write(Izq);
+        
+        tomarfotos(Der,Izq);  
+        
+        ventana.setImage(convertir(camaras.camaraDerecha().dameUltimaImagenProcesada()),ventana.lblImgDerPro);
+        ventana.setImage(convertir(camaras.camaraIzquierda().dameUltimaImagenProcesada()),ventana.lblImgIzqPro);                        
+      }
+    }
+    
+    public void tomarfotos(String derecha, String Izquierda)
+    {                
+        Highgui.imwrite(derecha, camaras.camaraDerecha().dameImagen());
+        Highgui.imwrite(Izquierda, camaras.camaraIzquierda().dameImagen());    
+    }
+    public void tomarfotos2(String derecha, String Izquierda)
+    {                
+        camaras.capturarCamaraEstereo();
+        Highgui.imwrite(derecha, camaras.camaraDerecha().dameImagen());
+        Highgui.imwrite(Izquierda, camaras.camaraIzquierda().dameImagen());    
+    }
+    public void distancia()
+    {
+        double d = camaras.dameDistanciaAZona();
+        ventana.setTitle(" OpenCV 3D DISTANCIA CENTRO :" + String.valueOf(d));
+    }
+    public void  CalibrarEstero()
+    {
+        camaras.calibrar();
+    }
+       
+   
     
     public void run()
     {
         while(true)
-        {
-            camera.read(imagen0);              
-             if(!imagen0.empty())
-             {                               
-                
-                Imgproc.cvtColor(imagen0, imagenTMP, Imgproc.COLOR_RGB2GRAY);               
+        {            
+            Mat[] imgs = camaras.capturarCamaraEstereoVideo();                          
+                        
+            if(!imgs[0].empty() )
+                ventana.setImage(convertir(imgs[0]),ventana.lblImgDer);
+            
+            if(!imgs[1].empty())
+                ventana.setImage(convertir(imgs[1]),ventana.lblImgIzq);
+            
+            if( b3d )
+            {
                 try
                 {
-                    runFace();
-                    detectarCosas();
-                    detectarCosas2();
-                    sleep(10);
+                    procesar3d();
                 }
-                catch (Exception ex)
+                catch(Exception e)
                 {
-                    m_log.error("Error en el hilo "+ ex.getMessage() );
+                    m_log.error("erro procesando");
                 }
-                
-                ventana.setImage(convertir(imagen0));
-                ventana.setImage2(convertir(imagenTMP));
-             }
+            }
             
-            
-        }
-        
+            if( bobjetos )
+            {
+                try
+                {
+                    procesarObjetos();
+                }
+                catch(Exception e)
+                {
+                    m_log.error("error procesando procesarObjetos");
+                }
+            }
+        }        
     }
     
-    public void detectarCosasV1()
+   /*public void detectarCosasV1()
     {
        try
        { 
@@ -197,26 +274,7 @@ public class JVision extends Thread
        { 
            if( m_bDetectar )  
            {  
-             /*Imgproc.cvtColor(imagen0, imagenTMP, Imgproc.COLOR_BGR2HSV); 
              
-             List<Mat> hsv_planes = new ArrayList<Mat>();
-             Core.split(imagenTMP, hsv_planes);
-             
-             Mat h_hist = hsv_planes.get(0);             
-             Mat s_hist = hsv_planes.get(1);
-             Mat v_hist = hsv_planes.get(2);
-                                            
-           
-
-            Imgproc.threshold(h_hist, h_hist, m_ithresholValue, 255, Imgproc.THRESH_BINARY );              
-            Imgproc.erode(h_hist, h_hist, new Mat() );
-            Imgproc.dilate(h_hist, h_hist, new Mat() ,new Point(-1, -1), 1);
-
-            Imgproc.threshold(s_hist, s_hist, m_ithresholValue, 255, Imgproc.THRESH_BINARY );                           
-            Imgproc.erode(s_hist, s_hist, new Mat() );
-            Imgproc.dilate(s_hist, s_hist, new Mat() ,new Point(-1, -1), 1);
-
-            Imgproc.threshold(v_hist, imagenTMP, m_ithresholValue, 255, Imgproc.THRESH_BINARY );    */
             Imgproc.threshold(imagenTMP, imagenTMP, m_ithresholValue, 255, Imgproc.THRESH_BINARY ); 
             Imgproc.erode(imagenTMP, imagenTMP, new Mat() );
             Imgproc.dilate(imagenTMP, imagenTMP, new Mat() ,new Point(-1, -1), 1);  
@@ -240,26 +298,7 @@ public class JVision extends Thread
            {
              
                
-               /* List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
-                Imgproc.findContours(imagenTMP, contours, new Mat() , Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-                
-                double maxArea = 0;
-                int index = -1;
-                for (MatOfPoint contour : contours) 
-                { // iterate over every contour in the list
-                    double area = Imgproc.contourArea(contour);
-                    if (area > 50) 
-                    {
-                      Mat hierarchy = new Mat();
-                      index = contours.indexOf(contour);                                            
-                      Scalar Red = new Scalar( 0, 0, 255);
-                      Scalar Blue = new Scalar( 0, 255, 0);
-                      Scalar Green = new Scalar( 255, 0, 0);                     
-                      
-                      Imgproc.drawContours(imagen0, contours, index, Green,-1, 8,hierarchy,0,new Point(-5,-5)); // 255 = draw contours in white                                                                                  
-                    }
-                             
-                }*/
+               
                 Blobs Regions = new Blobs();
                  Regions.BlobAnalysis(
                     imagenTMP,               // image
@@ -332,7 +371,7 @@ public class JVision extends Thread
         }
         
     }
-    
+    */
     private Image convertir(Mat imagen) 
     {
         MatOfByte matOfByte = new MatOfByte();
