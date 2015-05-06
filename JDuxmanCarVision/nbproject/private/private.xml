@@ -2,12 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/src/jduxmancarvision/OpenCV/CDisparidad.java</file>
-            <file>file:/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/src/jduxmancarvision/JDuxmanCarVision.java</file>
-            <file>file:/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/src/jduxmancarvision/JVision.java</file>
-            <file>file:/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/src/jduxmancarvision/OpenCV/CCamaraStereo.java</file>
-            <file>file:/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/src/jduxmancarvision/JVentana.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

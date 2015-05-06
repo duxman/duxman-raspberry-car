@@ -16,7 +16,8 @@ import org.apache.log4j.Logger;
 import org.opencv.calib3d.Calib3d;
 import static org.opencv.calib3d.Calib3d.CALIB_ZERO_DISPARITY;
 import org.opencv.calib3d.StereoBM;
-import static org.opencv.calib3d.StereoBM.BASIC_PRESET;
+import org.opencv.calib3d.StereoBM.*;
+import org.opencv.calib3d.StereoMatcher;
 import org.opencv.calib3d.StereoSGBM;
 import org.opencv.core.Core;
 import static org.opencv.core.Core.NORM_MINMAX;
@@ -30,8 +31,11 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.core.TermCriteria;
-import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
+import static org.opencv.imgproc.Imgproc.circle;
+import static org.opencv.imgproc.Imgproc.line;
+import static org.opencv.imgproc.Imgproc.putText;
+import static org.opencv.imgproc.Imgproc.rectangle;
 
 /**
  *
@@ -83,12 +87,12 @@ public class CCamaraStereo extends CFuncionesBasicasCamara implements IBasicoVid
         }
     }
     
-    public CCamara camaraDerecha()
+    public CCamara camaraIzquierda()
     {
         return m_camaraDerecha;
     }
     
-    public CCamara camaraIzquierda()
+    public CCamara camaraDerecha()
     {
         return m_camaraIzquierda;
     }
@@ -145,7 +149,7 @@ public class CCamaraStereo extends CFuncionesBasicasCamara implements IBasicoVid
         {
                                   
             TermCriteria criteria = new TermCriteria(TermCriteria.EPS + TermCriteria.MAX_ITER,100 ,1e-5 );            
-            
+            /*
             Calib3d.stereoCalibrate(m_listaPuntosObjetos,
                     m_camaraDerecha.m_puntosImagen,
                     m_camaraIzquierda.m_puntosImagen,
@@ -154,12 +158,12 @@ public class CCamaraStereo extends CFuncionesBasicasCamara implements IBasicoVid
                     m_camaraIzquierda.m_matrizCamara,
                     m_camaraIzquierda.m_distorsion,
                     m_imagenSize,
-                    R, T, E, F,
-                    criteria,
+                    R, T, E, F,CV_8U)
+                    TermCriteria.EPS + TermCriteria.MAX_ITER,
                     Calib3d.CALIB_FIX_ASPECT_RATIO +
                     Calib3d.CALIB_ZERO_TANGENT_DIST +
                     Calib3d.CALIB_SAME_FOCAL_LENGTH );
-            
+            */
             R1 = new Mat();//Mat.eye(new Size(3, 3), CV_64F);
             R2 = new Mat();//Mat.eye(new Size(3, 3), CV_64F);            
             P1 = new Mat();//Mat.eye(new Size(3, 4), CV_64F);
@@ -344,27 +348,31 @@ public class CCamaraStereo extends CFuncionesBasicasCamara implements IBasicoVid
         m_imagenRectificadaDerecha = new Mat();//CAM_WIDTH, CAM_HEIGTH, CV_8U);
         m_imagenRectificadaIzquierda = new Mat();
         
-        Imgproc.remap(m_camaraDerecha.dameImagenGris(), m_imagenRectificadaDerecha, mx1, my1, Imgproc.INTER_LINEAR);
-        Imgproc.remap(m_camaraIzquierda.dameImagenGris(), m_imagenRectificadaIzquierda, mx2, my2, Imgproc.INTER_LINEAR);
+        Imgproc.remap(m_camaraDerecha.dameImagen(), m_imagenRectificadaDerecha, mx1, my1, Imgproc.INTER_LINEAR);
+        Imgproc.remap(m_camaraIzquierda.dameImagen(), m_imagenRectificadaIzquierda, mx2, my2, Imgproc.INTER_LINEAR);
         
         
         BufferedImage bufImgIzq = m_disparidad.mat2Img(m_imagenRectificadaIzquierda);
         BufferedImage bufImgDer = m_disparidad.mat2Img(m_imagenRectificadaDerecha);
-        m_disparidad.denseDisparity(bufImgIzq, bufImgDer, 5, mindisp, maxdisp, maxperpixel,validate,texture);
+        m_disparidad.denseDisparitySubpixel(bufImgIzq, bufImgDer, 5, mindisp, maxdisp, maxperpixel,validate,texture);
         //m_disparidad.showDisparity(CDisparidad.DISPARIDAD_UI8, mindisp+10, maxdisp-100 );
-        
-        return m_disparidad.getMatDisparity(CDisparidad.DISPARIDAD_UI8, mindisp, maxdisp);                
+        line(m_imagenRectificadaIzquierda,new Point(160,1), new Point(160,239),new Scalar(255,0,0),3,8,0);
+        line(m_imagenRectificadaIzquierda,new Point(1,120), new Point(359,120),new Scalar(255,0,0),3,8,0);
+                
+        return m_disparidad.getMatDisparity(CDisparidad.DISPARIDAD_F32, mindisp, maxdisp);                
     }
       
-    public Mat procesarImagen3d(int mindisp ,int disp, int sombras, int iPrefilterCap, int iuniqueratio, int ispecksize, int ispeckrange, int imaxdiff )
+    public Mat procesarImagen3d(int imindisp ,int imaxdisp ,int preFilterSize ,int preFilterCap ,int SADWindowSize,int textureThreshold,int uniquenessRatio  )
     {
+        
+     
         capturarCamaraEstereo();
-        Mat imagenIzquierda = m_camaraIzquierda.dameImagen();
-        Mat imagenDerecha = m_camaraDerecha.dameImagen();        
-        return procesarImagen(imagenIzquierda, imagenDerecha,mindisp, disp, sombras,iPrefilterCap, iuniqueratio, ispecksize, ispeckrange, imaxdiff);
+        Mat imagenIzquierda = m_camaraIzquierda.dameImagenGris();
+        Mat imagenDerecha = m_camaraDerecha.dameImagenGris();        
+        return procesarImagen(imagenIzquierda, imagenDerecha, imindisp ,imaxdisp ,preFilterSize ,preFilterCap ,SADWindowSize,textureThreshold,uniquenessRatio               );
     }
     
-    private Mat procesarImagen(Mat imgIzq, Mat imgDer,int mindisp , int disp, int sombras, int iPrefilterCap, int iuniqueratio, int ispecksize, int ispeckrange, int imaxdiff )
+    private Mat procesarImagen(Mat imgIzq, Mat imgDer,int imindisp ,int imaxdisp ,int preFilterSize ,int preFilterCap ,int SADWindowSize,int textureThreshold,int uniquenessRatio  )
     {        
         
         m_imagenRectificadaDerecha = new Mat();//CAM_WIDTH, CAM_HEIGTH, CV_8U);
@@ -373,28 +381,46 @@ public class CCamaraStereo extends CFuncionesBasicasCamara implements IBasicoVid
         m_DisparidadProcesada = new Mat();//CAM_WIDTH, CAM_HEIGTH, CV_32F);
         m_imagenProfundidadRectificada = new Mat();//CAM_WIDTH, CAM_HEIGTH, CV_32F);
         
-        Imgproc.remap(imgDer, m_imagenRectificadaDerecha, mx1, my1, Imgproc.INTER_LINEAR);
-        Imgproc.remap(imgIzq, m_imagenRectificadaIzquierda, mx2, my2, Imgproc.INTER_LINEAR);
+        Imgproc.remap(imgIzq, m_imagenRectificadaIzquierda , mx1, my1, Imgproc.INTER_LINEAR);
+        Imgproc.remap(imgDer, m_imagenRectificadaDerecha, mx2, my2, Imgproc.INTER_LINEAR);
         
-      /*
-       StereoBM steroBM = new StereoBM(BASIC_PRESET, disp, sombras);
-       steroBM.compute(m_imagenRectificadaIzquierda, m_imagenRectificadaDerecha, m_DisparidadOriginal,CV_32F);
-      */  
+      
+       //StereoBM steroBM = new StereoBM(BASIC_PRESET, disp, sombras);
+       //steroBM.compute(m_imagenRectificadaIzquierda, m_imagenRectificadaDerecha, m_DisparidadOriginal,CV_32F);
+        StereoBM sb = StereoBM.create(imaxdisp,SADWindowSize);
+        /*sb.setPreFilterSize(preFilterSize);
+        sb.setPreFilterCap(preFilterCap);
+        sb.setBlockSize(SADWindowSize);
+        sb.setMinDisparity(imindisp);
+        sb.setNumDisparities(imaxdisp);
+        sb.setTextureThreshold(textureThreshold);
+        sb.setUniquenessRatio(uniquenessRatio);
+        */
+        sb.compute(m_imagenRectificadaIzquierda, m_imagenRectificadaDerecha, m_DisparidadOriginal);        
+        imshow
+       /* StereoSGBM sb = StereoSGBM.create(imindisp, imaxdisp, SADWindowSize);
+        sb.setMode(CV_32F);       
+        sb.setPreFilterCap(preFilterCap);
+        sb.setBlockSize(SADWindowSize);
+        sb.setMinDisparity(imindisp);
+        sb.setNumDisparities(imaxdisp);        
+        sb.setUniquenessRatio(uniquenessRatio);
+        sb.compute(m_imagenRectificadaIzquierda, m_imagenRectificadaDerecha, m_DisparidadOriginal);        
+        */
         
-        int P1 = 8*sombras*sombras*m_imagenRectificadaIzquierda.channels();
+     /*   int P1 = 8*sombras*sombras*m_imagenRectificadaIzquierda.channels();
         int P2 = 32*sombras*sombras*m_imagenRectificadaIzquierda.channels();;
         StereoSGBM steroBM = new StereoSGBM(mindisp,disp,sombras,P1,P2,imaxdiff,iPrefilterCap,iuniqueratio,ispecksize,ispeckrange,false);
         steroBM.compute(m_imagenRectificadaIzquierda, m_imagenRectificadaDerecha, m_DisparidadOriginal);
-        
-       
-        Core.MinMaxLocResult minmaxResult =  Core.minMaxLoc(m_DisparidadOriginal);
-        
-        //m_DisparidadOriginal.convertTo(m_DisparidadOriginal,CV_8U , 1/16);//255/(minmaxResult.maxVal - minmaxResult.minVal));
-        
-        Core.normalize(m_DisparidadOriginal, m_DisparidadProcesada,0,255,Core.NORM_MINMAX);
+        */
        
         
-        Calib3d.reprojectImageTo3D(m_DisparidadProcesada,m_imagenProfundidadRectificada,m_perspectiva,false,CV_32F);
+        
+        m_DisparidadOriginal.convertTo(m_DisparidadProcesada,CV_32F , 1/16);//255/(minmaxResult.maxVal - minmaxResult.minVal));        
+        Core.normalize(m_DisparidadOriginal, m_DisparidadProcesada,0,256,Core.NORM_MINMAX);
+       
+        
+         Calib3d.reprojectImageTo3D(m_DisparidadOriginal,m_imagenProfundidadRectificada,m_perspectiva,true,CV_32F);
         
         //,0,32,NORM_MINMAX);        
         return m_imagenProfundidadRectificada;
@@ -411,58 +437,44 @@ public class CCamaraStereo extends CFuncionesBasicasCamara implements IBasicoVid
     }
     
     public double dameDistanciaAZona1()
-    {
-        
-        short[] aDisparidad = new short[1];
-        m_DisparidadOriginal.get(120, 160, aDisparidad);
-        int dDisparidad= aDisparidad[0]; //& 0xffff;
-        
-        
-        double dDistanciaFocalPixel = (m_imagenSize.width * 0.5)/tan((FOCAL_FOV *0.5 *FOCAL_PI)/180 );
+    {                        
+        double dDisparidad= m_disparidad.getdisparityPixel(160, 120);
+         circle(m_imagenRectificadaDerecha, new Point(dDisparidad,120),3, new Scalar(255,0,0), 2);
+         circle(m_imagenRectificadaDerecha, new Point(dDisparidad-160,120),3, new Scalar(255,255,0), 2);
+         circle(m_imagenRectificadaDerecha, new Point(dDisparidad-50,120),3, new Scalar(0,255,0), 2);
+        //double dDistanciaFocalPixel = (m_imagenSize.width * 0.5)/tan((FOCAL_FOV *0.5 *FOCAL_PI)/180 );
                                
-        double distance_mm = LENS_DISTANCE * dDistanciaFocalPixel / dDisparidad;   
+        double distance_mm = LENS_DISTANCE * 316.63 /( dDisparidad);   
         
         return distance_mm;
     }
     public double dameDistanciaAZona()
     {        
         short[] aDisparidad = new short[1];
+        float idisparidad = aDisparidad[0];//0xffff;
         double[][] valores ;
-        m_DisparidadOriginal.get(120, 160, aDisparidad);
-        if( aDisparidad[0] != 0)
-        {
-            
-            
-            valores = new double[m_perspectiva.rows()][ m_perspectiva.cols()];
-            
-            StringBuffer bf = new StringBuffer();
-            int cnt=0;
-            for(int i=0 ; i< (m_perspectiva.rows()) ; i++)
-            {
-                for(int j=0 ; j< (m_perspectiva.cols()) ; j++,cnt++)
-                {
-                    double[] valorestemp = new double[1];
-                    m_perspectiva.get(i, j, valorestemp );    
-                    valores[i][j] = valorestemp[0];
-                }
-            }   
-            double dDistanciaFocalPixel = (m_imagenSize.width * 0.5)/tan((FOCAL_FOV *0.5 *FOCAL_PI)/180 );
-            
-            
-            double X = 160 * valores[0][0] + valores[0][3];
-            double Y = 120 * valores[1][1] + valores[1][3];
-            double Z = dDistanciaFocalPixel;
-            double W = aDisparidad[0] * valores[3][2] + valores[3][3];
-
-            X = X / W;
-            Y = Y / W;
-            Z = Z / W;
-            
-                       
-            m_log.info("X:" + X + " Y:" +Y + " Z:" + Z);
-        }
+        m_DisparidadOriginal.get(240, 320, aDisparidad);
         
-        return 0;
+        double Z = 7666;
+        //if( idisparidad > 0)
+        {                              
+           double dDistanciaFocalPixel = 260.089;          
+           double W = idisparidad;           
+           Z = Z / aDisparidad[0];
+                             
+           circle(m_imagenRectificadaDerecha, new Point(idisparidad,240),3, new Scalar(255,0,0), 2);
+           circle(m_imagenRectificadaDerecha, new Point(320 - idisparidad ,240),4, new Scalar(255,255,0), 2);
+           circle(m_imagenRectificadaDerecha, new Point(320 + idisparidad ,240),5, new Scalar(0,255,0), 2);
+           
+            //m_disparidad.showDisparity(CDisparidad.DISPARIDAD_UI8, mindisp+10, maxdisp-100 );
+           line(m_imagenRectificadaIzquierda,new Point(320,1), new Point(320,480),new Scalar(255,0,0),3,8,0);
+           line(m_imagenRectificadaIzquierda,new Point(1,240), new Point(639,240),new Scalar(255,0,0),3,8,0);
+           m_log.info("Z:" + Z + " Disparidad :"  + aDisparidad[0]);
+           return Z;
+           
+        }
+       // return 0;
+        
     }
     public void detectarObjetos(int iThresholdmin, int ithresholdMax, int iThresholdType, int iPunto, int iAreaMin)
     {
@@ -501,10 +513,10 @@ public class CCamaraStereo extends CFuncionesBasicasCamara implements IBasicoVid
                     if ( similitud ( Region1[Blobs.BLOBAREA], Region2[Blobs.BLOBAREA], 0.9 ) )                  
                     {
                         m_listaParejas.add( new parejaRegiones(i, j, Region1, Region2));
-                        Core.rectangle(m_camaraDerecha.m_ultimaImagen, new Point(MinX1, MinY1), new Point(MaxX1,MaxY1), new Scalar(0, 255, 0),3);
+                        rectangle(m_camaraDerecha.m_ultimaImagen, new Point(MinX1, MinY1), new Point(MaxX1,MaxY1), new Scalar(0, 255, 0),3);
                         String text= "("+i+","+j+")["+area1+"-"+area2+"]";
-                        Core.putText(m_camaraDerecha.m_ultimaImagen, text,new Point(MaxX1/2,MaxY1/2),3,-2, new Scalar(255, 0, 0));
-                        Core.putText(m_camaraIzquierda.m_ultimaImagen, text,new Point(MaxX2/2,MaxY2/2),3,-2, new Scalar(255, 0, 0));
+                        putText(m_camaraDerecha.m_ultimaImagen, text,new Point(MaxX1/2,MaxY1/2),3,-2, new Scalar(255, 0, 0));
+                        putText(m_camaraIzquierda.m_ultimaImagen, text,new Point(MaxX2/2,MaxY2/2),3,-2, new Scalar(255, 0, 0));
                     }               
                }
             }            

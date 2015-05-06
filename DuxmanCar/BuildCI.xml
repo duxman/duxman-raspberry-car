@@ -64,6 +64,15 @@
          <attribute name="Main-Class" value="duxmancar.ServoTest"/>        
       </manifest>
     </jar>
+    
+     <jar destfile="${dist_dir}/${ant.project.name}_distancia.jar">
+      <fileset dir="${build_dir}" excludes="**/*.properties;**/*.xml" />
+      <manifest>				
+        <attribute name="Built-Date" value="${TODAY}"/>												
+        <attribute name="Class-Path" value="${dist_dir}/${ant.project.name}_distancia.jar  lib/log4j-1.2.17.jar lib/bluecove-gpl-2.1.0.jar lib/bluecove-2.1.0.jar lib/pi4j-core.jar"/>						
+         <attribute name="Main-Class" value="duxmancar.Raspberry.Hardware.CSensorDistancia"/>        
+      </manifest>
+    </jar>
      
    <copy todir="${dist_dir}/lib">
        <fileset dir="./lib" includes="**/*.jar"/>        

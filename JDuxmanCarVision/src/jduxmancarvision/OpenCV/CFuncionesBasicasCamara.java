@@ -13,6 +13,8 @@ import org.opencv.core.Point;
 import org.opencv.core.Point3;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import static org.opencv.imgproc.Imgproc.circle;
+import static org.opencv.imgproc.Imgproc.rectangle;
 
 /**
  *
@@ -43,7 +45,7 @@ public class CFuncionesBasicasCamara implements IBasicoVideo
     protected Mat DrawCircle( Mat imagen )
     {
         Mat rtn = new Mat();
-        Core.circle(imagen, new Point(5,5), 4, new Scalar(255,0,0),4);
+        circle(imagen, new Point(5,5), 4, new Scalar(255,0,0),4);
         imagen.copyTo(rtn);
         return rtn;
     }
@@ -51,7 +53,7 @@ public class CFuncionesBasicasCamara implements IBasicoVideo
     protected Mat DrawSquare( Mat imagen )
     {
         Mat rtn = new Mat();
-        Core.rectangle(imagen, new Point(1,1), new Point(5,5), new Scalar(0,255,0),4);
+        rectangle(imagen, new Point(1,1), new Point(5,5), new Scalar(0,255,0),4);
         imagen.copyTo(rtn);
         return rtn;
     }

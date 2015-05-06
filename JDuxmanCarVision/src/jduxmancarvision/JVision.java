@@ -24,9 +24,10 @@ import org.apache.log4j.Logger;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.Size;
-import org.opencv.highgui.Highgui;
 import jduxmancarvision.OpenCV.*;
 import org.opencv.core.Core;
+import static org.opencv.imgcodecs.Imgcodecs.imencode;
+import static org.opencv.imgcodecs.Imgcodecs.imwrite;
 /**
  *
  * @author duxman
@@ -41,6 +42,7 @@ public class JVision extends Thread
     boolean b3d;
     boolean bobjetos;
     static int inum;
+    PrintWriter listaXML;
     PrintWriter lista;
     public JVision()
     {       
@@ -60,7 +62,7 @@ public class JVision extends Thread
             inum = 0;
             m_log.info("Inicializamos opencv");
             // Load the native library.
-            System.load("/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/dist/lib/libopencv_java2410.so" );                        
+            System.load("/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/dist/lib/libopencv_java300.so" );                        
             inicializaVideo();            
         }
         catch (InterruptedException ex)
@@ -91,47 +93,55 @@ public class JVision extends Thread
     
     public void procesar3d()
     {
-      int imindisp =( ( Integer) ventana.mindisp.getValue()).intValue();
-      int imaxdisp =( ( Integer) ventana.spindisp.getValue()).intValue()*10;
+      int imindisp =( ( Integer) ventana.mindisp.getValue()).intValue()*16;
+      int imaxdisp =( ( Integer) ventana.spindisp.getValue()).intValue()*16;
+      int preFilterSize =( ( Integer) ventana.preFilterSize.getValue()).intValue();
+      int preFilterCap =( ( Integer) ventana.preFilterCap.getValue()).intValue();
+      int SADWindowSize =( ( Integer) ventana.SADWindowSize.getValue()).intValue();
+      int textureThreshold =( ( Integer) ventana.textureThreshold.getValue()).intValue();
+      int uniquenessRatio =( ( Integer) ventana.uniquenessRatio.getValue()).intValue();
+                  
+              
+      
+      /*int isad =( ( Integer) ventana.spinsombras.getValue()).intValue();
       int maxperpixel =( ( Integer) ventana.maxperpixel.getValue()).intValue();
       int validate =( ( Integer) ventana.validate.getValue()).intValue();
       double texture =( ( Integer) ventana.texture.getValue()).doubleValue();
       texture  = (texture<0)?(-texture/10):(texture);
-              
-      
-      /*int isad =( ( Integer) ventana.spinsombras.getValue()).intValue();
-      
       int iPrefilterCap =( ( Integer) ventana.iprefiltersize.getValue()).intValue();
       int iuniqueratio =( ( Integer) ventana.iuniqueratio.getValue()).intValue();
       int ispecksize =( ( Integer) ventana.iwinsize.getValue()).intValue();
       int ispeckrange =( ( Integer) ventana.iwinrange.getValue()).intValue();
       int imaxdiff =( ( Integer) ventana.imaxdiff.getValue()).intValue();
-      
-      Mat m = camaras.procesarImagen3d(imindisp,idisp, isad,iPrefilterCap, iuniqueratio, ispecksize, ispeckrange, imaxdiff );
+      */
+      Mat m = camaras.procesarImagen3d(imindisp ,imaxdisp ,preFilterSize ,preFilterCap ,SADWindowSize,textureThreshold,uniquenessRatio               );
       
       if(m.empty() == false )
-      {
-          ventana.setImage( convertir(camaras.m_imagenRectificadaDerecha) , ventana.lblImgDerPro);
-          ventana.setImage( convertir(camaras.m_imagenRectificadaIzquierda) , ventana.lblImgIzqPro);
+      {          
+          
           ventana.setImage( convertir(m) , ventana.lblImgFinal);
           ventana.setImage( convertir(camaras.m_DisparidadProcesada) , ventana.lblImgFinal2);
-      }    */
-      
-      
-      Mat m = camaras.procesarImagen3d(imindisp,imaxdisp, maxperpixel,validate, texture );
-      
-      if(m.empty() == false )
-      {
+          distancia();
           ventana.setImage( convertir(camaras.m_imagenRectificadaDerecha) , ventana.lblImgDerPro);
           ventana.setImage( convertir(camaras.m_imagenRectificadaIzquierda) , ventana.lblImgIzqPro);
-          ventana.setImage( convertir(m) , ventana.lblImgFinal);          
-      }  
+      } 
       
+      
+    /*  Mat m = camaras.procesarImagen3d(imindisp,imaxdisp, maxperpixel,validate, texture );
+      
+      if(m.empty() == false )
+      {          
+          ventana.setImage( convertir(camaras.m_imagenRectificadaIzquierda) , ventana.lblImgIzqPro);
+          ventana.setImage( convertir(m) , ventana.lblImgFinal);          
+          distancia();
+          ventana.setImage( convertir(camaras.m_imagenRectificadaDerecha) , ventana.lblImgDerPro);
+      }  
+      */
     }
     public void tomarfoto3()
     {
-        Highgui.imwrite("imgrgb.ppm", camaras.camaraDerecha().dameImagen());
-        Highgui.imwrite("disparidad.pgm", camaras.m_DisparidadProcesada);
+        imwrite("imgrgb.ppm", camaras.camaraIzquierda().dameImagen());
+        imwrite("disparidad.pgm", camaras.m_DisparidadProcesada);
     }
     
    
@@ -146,55 +156,77 @@ public class JVision extends Thread
        
       camaras.detectarObjetos(iTresMin, iTresMax, iThresType, iPunto, iarea);      
       
-      ventana.setImage( convertir(camaras.camaraDerecha().dameImagen()) , ventana.lblImgIzqPro);
-      ventana.setImage( convertir(camaras.camaraIzquierda().dameImagen()) , ventana.lblImgDerPro);            
+      ventana.setImage( convertir(camaras.camaraIzquierda().dameImagen()) , ventana.lblImgIzqPro);
+      ventana.setImage( convertir(camaras.camaraDerecha().dameImagen()) , ventana.lblImgDerPro);            
       
-      ventana.setImage(convertir(camaras.camaraDerecha().dameUltimaImagenProcesada()),ventana.lblImgFinal);
-      ventana.setImage(convertir(camaras.camaraIzquierda().dameUltimaImagenProcesada()),ventana.lblImgFinal2);
+      ventana.setImage(convertir(camaras.camaraIzquierda().dameUltimaImagenProcesada()),ventana.lblImgFinal);
+      ventana.setImage(convertir(camaras.camaraDerecha().dameUltimaImagenProcesada()),ventana.lblImgFinal2);
     }
-    
+    public void fichero() throws FileNotFoundException
+    {
+        if( listaXML == null )
+        {
+          listaXML = new PrintWriter("imagenes/list.xml") ;
+          lista = new PrintWriter("imagenes/list.txt") ;
+          listaXML.write("<?xml version=\"1.0\"?>\n<opencv_storage>\n<imagelist>\n");
+        }
+        else
+        {
+            listaXML.write("</imagelist>\n</opencv_storage>\n");
+            listaXML.flush();
+            listaXML.close();
+            lista.flush();
+            lista.close();
+        }
+    }
     public void  CalibrarIndividual() throws IOException
     {
       if( lista == null )
       {
           lista = new PrintWriter("imagenes/list.txt") ;
       }
-      
+      if( listaXML == null )
+      {
+          listaXML = new PrintWriter("imagenes/list.xml") ;
+      }
       int esqX=((Integer)ventana.esquinasX.getValue()).intValue();
       int esqY=((Integer)ventana.esquinasY.getValue()).intValue();
       Size partnerSize = new Size(esqX,esqY );
       boolean ret = camaras.calibrarIndividual( partnerSize );
       if(ret == true )
       {
-        String Der,Izq;
-        Der = "imagenes/der"+inum+".ppm";
-        Izq = "imagenes/izq"+inum+".ppm";
+        String izq,der;
+        izq = "imagenes/izq"+inum+".jpg";
+        der = "imagenes/der"+inum+".jpg";
         inum++;                
+                        
+        listaXML.write("\""+izq+"\"\n");
+        listaXML.write("\""+der+"\"\n");       
+        lista.write(izq);
+        lista.write(der);
         
-        lista.write(Der);
-        lista.write(Izq);
+        tomarfotos(izq,der);  
         
-        tomarfotos(Der,Izq);  
-        
-        ventana.setImage(convertir(camaras.camaraDerecha().dameUltimaImagenProcesada()),ventana.lblImgDerPro);
-        ventana.setImage(convertir(camaras.camaraIzquierda().dameUltimaImagenProcesada()),ventana.lblImgIzqPro);                        
+        ventana.setImage(convertir(camaras.camaraIzquierda().dameUltimaImagenProcesada()),ventana.lblImgDerPro);
+        ventana.setImage(convertir(camaras.camaraDerecha().dameUltimaImagenProcesada()),ventana.lblImgIzqPro);                        
       }
     }
     
-    public void tomarfotos(String derecha, String Izquierda)
+    public void tomarfotos(String izq, String der)
     {                
-        Highgui.imwrite(derecha, camaras.camaraDerecha().dameImagen());
-        Highgui.imwrite(Izquierda, camaras.camaraIzquierda().dameImagen());    
+        imwrite(izq, camaras.camaraIzquierda().dameImagen());
+        imwrite(der, camaras.camaraDerecha().dameImagen());    
     }
     public void tomarfotos2(String derecha, String Izquierda)
     {                
         camaras.capturarCamaraEstereo();
-        Highgui.imwrite(derecha, camaras.camaraDerecha().dameImagen());
-        Highgui.imwrite(Izquierda, camaras.camaraIzquierda().dameImagen());    
+        imwrite(derecha, camaras.camaraIzquierda().dameImagen());
+        imwrite(Izquierda, camaras.camaraDerecha().dameImagen());    
     }
     public void distancia()
     {
         double d = camaras.dameDistanciaAZona();
+        if ( d > 10)
         ventana.setTitle(" OpenCV 3D DISTANCIA CENTRO :" + String.valueOf(d));
     }
     public void  CalibrarEstero()
@@ -375,7 +407,7 @@ public class JVision extends Thread
     private Image convertir(Mat imagen) 
     {
         MatOfByte matOfByte = new MatOfByte();
-        Highgui.imencode(".jpg", imagen, matOfByte); 
+        imencode(".jpg", imagen, matOfByte); 
 
         byte[] byteArray = matOfByte.toArray();
         BufferedImage bufImage = null;

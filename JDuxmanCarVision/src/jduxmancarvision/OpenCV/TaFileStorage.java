@@ -234,6 +234,10 @@ public class TaFileStorage
             {
                 dtStr = "unknown";
             }
+            if (type == CvType.CV_8UC1)
+            {
+                dtStr = "d";
+            }
             dt.appendChild(doc.createTextNode(dtStr));
 
             Element data = doc.createElement("data");

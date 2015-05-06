@@ -2,6 +2,9 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Raspberry/Hardware/CSensorDistancia.java</file>
+            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/ServoTest.java</file>
+        </group>
     </open-files>
 </project-private>

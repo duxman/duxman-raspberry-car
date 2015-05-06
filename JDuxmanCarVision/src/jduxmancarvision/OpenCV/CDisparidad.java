@@ -81,7 +81,10 @@ public class CDisparidad
                                               ImageUInt8 rectRight,
                                               int regionSize,
                                               int minDisparity,
-                                              int maxDisparity)
+                                              int maxDisparity,
+                                              int maxperpixel,
+                                              int validate, 
+                                              double texture)
   {
     // A slower but more accuracy algorithm is selected
     // All of these parameters should be turned
@@ -91,9 +94,9 @@ public class CDisparidad
             maxDisparity,
             regionSize,
             regionSize,
-            25,
-            1,
-            0.2,
+            maxperpixel,
+            validate,
+            texture,
             ImageUInt8.class);
 
     // process and return the results
@@ -148,13 +151,16 @@ public class CDisparidad
                                               BufferedImage rectRight,
                                               int regionSize,
                                               int minDisparity,
-                                              int maxDisparity)
+                                              int maxDisparity,
+                                              int maxperpixel,
+                                              int validate, 
+                                              double texture)
   {
 
     ImageUInt8 distLeft = ConvertBufferedImage.convertFrom (rectLeft, (ImageUInt8) null);
     ImageUInt8 distRight = ConvertBufferedImage.convertFrom (rectRight, (ImageUInt8) null);
 
-    return denseDisparitySubpixel (distLeft, distRight, regionSize, minDisparity, maxDisparity);
+    return denseDisparitySubpixel (distLeft, distRight, regionSize, minDisparity, maxDisparity,maxperpixel,validate,texture);
   }
 
   public double spareDisparity (BufferedImage rectLeft,
@@ -199,7 +205,13 @@ public class CDisparidad
     }
     return visualized;
   }
-
+  
+  public double getdisparityPixel(int x, int y)
+  {
+      double rtn = m_disparityMapF32.get(x,y);      
+      return rtn;
+  }
+  
   public void showDisparity (int iTypeDisparity, int iMin, int iMax)
   {
     if ((iTypeDisparity == DISPARIDAD_BUF_F32) || (iTypeDisparity == DISPARIDAD_BUF_UI8))

@@ -14,9 +14,11 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Size;
 import org.opencv.core.TermCriteria;
-import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 import static org.opencv.imgproc.Imgproc.ADAPTIVE_THRESH_MEAN_C;
+import org.opencv.videoio.VideoCapture;
+import static org.opencv.videoio.Videoio.CAP_PROP_FRAME_HEIGHT;
+import static org.opencv.videoio.Videoio.CAP_PROP_FRAME_WIDTH;
 
 /**
  *
@@ -76,6 +78,8 @@ public class CCamara extends CFuncionesBasicasCamara implements IBasicoVideo
 
             if (m_camara.isOpened() == true)
             {
+               m_camara.set(CAP_PROP_FRAME_WIDTH , 640);
+               m_camara.set(CAP_PROP_FRAME_HEIGHT , 480);
                 m_iIdCamara = iId;                            
                 m_log.info("Encontrada Camara " + iId);                
             }                

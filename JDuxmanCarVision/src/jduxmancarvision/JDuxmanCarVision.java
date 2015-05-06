@@ -36,16 +36,16 @@ public class JDuxmanCarVision
         
         m_log.info("Ejecutamos comando para detectar video devices");        
         
-        String VideoDerecha =  cmdExec(IBasicoVideo.COMANDO_VIDEO_DEV_DER);
-        String VideoIzquierda =  cmdExec(IBasicoVideo.COMANDO_VIDEO_DEV_IZQ);
+        String VideoIzq =  cmdExec(IBasicoVideo.COMANDO_VIDEO_DEV_IZQ);
+        String VideoDer =  cmdExec(IBasicoVideo.COMANDO_VIDEO_DEV_DER);
         
-        int index = VideoDerecha.indexOf(IBasicoVideo.CADENA_BUSCAR)+ IBasicoVideo.CADENA_BUSCAR.length();        
-        String videoDerId =  VideoDerecha.substring(index ,index + 1 );
-        CAMARA_DERECHA = Integer.parseInt(videoDerId);
+        int index = VideoIzq.indexOf(IBasicoVideo.CADENA_BUSCAR)+ IBasicoVideo.CADENA_BUSCAR.length();        
+        String videoDerId =  VideoIzq.substring(index ,index + 1 );
+        CAMARA_IZQUIERDA = Integer.parseInt(videoDerId);
         
-        index = VideoIzquierda.indexOf(IBasicoVideo.CADENA_BUSCAR)+ IBasicoVideo.CADENA_BUSCAR.length();        
-        String videoIzqId =  VideoIzquierda.substring(index ,index + 1 );
-        CAMARA_IZQUIERDA = Integer.parseInt(videoIzqId);
+        index = VideoDer.indexOf(IBasicoVideo.CADENA_BUSCAR)+ IBasicoVideo.CADENA_BUSCAR.length();        
+        String videoIzqId =  VideoDer.substring(index ,index + 1 );
+        CAMARA_DERECHA = Integer.parseInt(videoIzqId);
         
         
         vision = new JVision();
