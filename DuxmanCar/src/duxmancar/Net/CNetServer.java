@@ -53,12 +53,10 @@ public class CNetServer extends CSocketServer
                 m_socket = m_server.accept();
                 m_log.info("Comenzamos proceso Socket Red");
                 setConectado(Boolean.TRUE);
-
+                m_log.info("Cliente conectado, obtenemos conexiones de red");
+                creaBufferStream(m_socket.getInputStream(), m_socket.getOutputStream());                
                 while (getSalir() == false)
-                {
-                    m_log.info("Cliente conectado, obtenemos conexiones de red");
-                    creaBufferStream(m_socket.getInputStream(), m_socket.getOutputStream());
-
+                {                                                            
                     EsperaSalir();
                 }
 

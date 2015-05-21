@@ -217,12 +217,12 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
         }
         m_log.info("Añadido MSG :" + sDato);
         m_listaMsg.add(sDato);
-        notify();
+        notifyAll();
     }
 
     public synchronized String getMensaje() throws Exception
     {
-        notify();
+        notifyAll();
         while (m_listaMsg.size() == 0)
         {
             wait();

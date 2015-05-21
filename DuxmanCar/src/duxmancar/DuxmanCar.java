@@ -50,12 +50,12 @@ public class DuxmanCar
             claselog = new CLog(false, CProperties.FICHERO_LOG, CProperties.MAX_SIZE_LOG, CProperties.MAX_FILES_LOG);
             m_log = Logger.getRootLogger();
 
-            oControladorServos = new CGestorI2CAdafruit(CProperties.PUERTO_CONTROLADOR_SERVOS, CProperties.FREQ_CONTROLADOR_SERVOS);
+            //oControladorServos = new CGestorI2CAdafruit(CProperties.PUERTO_CONTROLADOR_SERVOS, CProperties.FREQ_CONTROLADOR_SERVOS);
             oGpio = new CGestorGPIO();
                     
             
             m_log.info("Inicio Aplicacion");
-            CDuxmanCar duxmanCar = new CDuxmanCar(oControladorServos);
+            CDuxmanCar duxmanCar = new CDuxmanCar(oGpio.dameGPIOController());
             duxmanCar.init();
 
             m_log.info("Creada clase principal");

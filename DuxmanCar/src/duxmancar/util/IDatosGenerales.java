@@ -90,7 +90,7 @@ public interface IDatosGenerales
     };
     public static enum eDestinos	
     {
-        RASPBERRY(0),CONTROLADOR(1),SERVOCONTROL(2),LEDCONTROL(3),CAMCONTROL(4);
+        RASPBERRY(0),CONTROLADOR(1),SERVOCONTROL(2),LEDCONTROL(3),CAMCONTROL(4),DCCONTROL(5);
         private final int m_value;
         private eDestinos(int value)
         {

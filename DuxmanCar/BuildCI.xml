@@ -51,26 +51,26 @@
       <fileset dir="${build_dir}" excludes="**/*.properties;**/*.xml" />
       <manifest>				
         <attribute name="Built-Date" value="${TODAY}"/>												
-        <attribute name="Class-Path" value="${dist_dir}/${ant.project.name}.jar  lib/log4j-1.2.17.jar lib/bluecove-gpl-2.1.0.jar lib/bluecove-2.1.0.jar lib/pi4j-core.jar"/>						
+        <attribute name="Class-Path" value="${dist_dir}/${ant.project.name}.jar  lib/log4j-1.2.17.jar lib/bluecove-gpl-2.1.0.jar lib/bluecove-2.1.0.jar lib/pi4j-core.jar lib/opencv-300.jar"/>						
          <attribute name="Main-Class" value="duxmancar.DuxmanCar"/>        
       </manifest>
     </jar>
    
-    <jar destfile="${dist_dir}/${ant.project.name}_test.jar">
+    <jar destfile="${dist_dir}/${ant.project.name}_distancia.jar">
       <fileset dir="${build_dir}" excludes="**/*.properties;**/*.xml" />
       <manifest>				
         <attribute name="Built-Date" value="${TODAY}"/>												
-        <attribute name="Class-Path" value="${dist_dir}/${ant.project.name}_test.jar  lib/log4j-1.2.17.jar lib/bluecove-gpl-2.1.0.jar lib/bluecove-2.1.0.jar lib/pi4j-core.jar"/>						
-         <attribute name="Main-Class" value="duxmancar.ServoTest"/>        
+        <attribute name="Class-Path" value="${dist_dir}/${ant.project.name}_distancia.jar  lib/log4j-1.2.17.jar lib/bluecove-gpl-2.1.0.jar lib/bluecove-2.1.0.jar lib/pi4j-core.jar lib/opencv-300.jar"/>						
+         <attribute name="Main-Class" value="duxmancar.Raspberry.Hardware.CMedidorDistancia"/>        
       </manifest>
     </jar>
     
-     <jar destfile="${dist_dir}/${ant.project.name}_distancia.jar">
+     <jar destfile="${dist_dir}/${ant.project.name}_DC.jar">
       <fileset dir="${build_dir}" excludes="**/*.properties;**/*.xml" />
       <manifest>				
         <attribute name="Built-Date" value="${TODAY}"/>												
-        <attribute name="Class-Path" value="${dist_dir}/${ant.project.name}_distancia.jar  lib/log4j-1.2.17.jar lib/bluecove-gpl-2.1.0.jar lib/bluecove-2.1.0.jar lib/pi4j-core.jar"/>						
-         <attribute name="Main-Class" value="duxmancar.Raspberry.Hardware.CSensorDistancia"/>        
+        <attribute name="Class-Path" value="${dist_dir}/${ant.project.name}_DC.jar  lib/log4j-1.2.17.jar lib/bluecove-gpl-2.1.0.jar lib/bluecove-2.1.0.jar lib/pi4j-core.jar lib/dio.jar  lib/opencv-300.jar"/>						
+         <attribute name="Main-Class" value="duxmancar.Raspberry.Hardware.L298NTest"/>        
       </manifest>
     </jar>
      

@@ -17,9 +17,7 @@ public class CDato extends CDatoProvider implements IDatosGenerales
      */
     public CDato(String sDato)
     {
-        super(sDato);
-
-        Parametros = Collections.synchronizedList(new ArrayList<String>());
+        super(sDato);       
     }
 
     /**
@@ -30,6 +28,7 @@ public class CDato extends CDatoProvider implements IDatosGenerales
      */
     public String CodificaMensaje()
     {
+        Parametros = Collections.synchronizedList(new ArrayList<String>());
         StringBuffer sRtn = new StringBuffer();
         sRtn.append(String.format("%04d", getId()));
         sRtn.append(String.format("%04d", getOrigen()));
@@ -45,23 +44,24 @@ public class CDato extends CDatoProvider implements IDatosGenerales
      */
     @Override public void DescodificaMensaje()
     {
-        setId(Integer.parseInt(getDato().substring(POS_ID * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ID + 1))));
-        setOrigen(Integer.parseInt(getDato().substring(POS_ORIGEN * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ORIGEN + 1))));
-        setDestino(Integer.parseInt(getDato().substring(POS_DESTINO * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_DESTINO + 1))));
-        setAccion(Integer.parseInt(getDato().substring(POS_ACCION * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ACCION + 1))));
-        setParametrosUnidos(getDato().substring(12, getDato().length()));
+        String datostemp= getDato().substring(INI_DATOS.length(),getDato().length()-FIN_DATOS.length());
+        Parametros = Collections.synchronizedList(new ArrayList<String>());
+        
+        m_log.info("Dato a procesar ["+ datostemp + "]");
+        setId(Integer.parseInt(datostemp.substring(POS_ID * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ID + 1))));
+        setOrigen(Integer.parseInt(datostemp.substring(POS_ORIGEN * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ORIGEN + 1))));
+        setDestino(Integer.parseInt(datostemp.substring(POS_DESTINO * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_DESTINO + 1))));
+        setAccion(Integer.parseInt(datostemp.substring(POS_ACCION * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ACCION + 1))));
+        setParametrosUnidos(datostemp.substring(12, datostemp.length()));
         DescodificaParametros();
+        m_log.info(toString());
+        
     }
 
     @Override public void DescodificaMensaje(String sDato)
     {
         setDato(sDato);
-        setId(Integer.parseInt(sDato.substring(POS_ID * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ID + 1))));
-        setOrigen(Integer.parseInt(sDato.substring(POS_ORIGEN * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ORIGEN + 1))));
-        setDestino(Integer.parseInt(sDato.substring(POS_DESTINO * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_DESTINO + 1))));
-        setAccion(Integer.parseInt(sDato.substring(POS_ACCION * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ACCION + 1))));
-        setParametrosUnidos(sDato.substring(12, sDato.length()));
-        DescodificaParametros();
+        DescodificaMensaje();        
     }
 
     /**
@@ -72,10 +72,17 @@ public class CDato extends CDatoProvider implements IDatosGenerales
     {
         synchronized (Parametros)
         {
-            String[] aParametros = getParametrosUnidos().split(DIVISOR_PARAMETROS);
-            for (String par : aParametros)
+            if(getParametrosUnidos().contains(DIVISOR_PARAMETROS) )
             {
-                Parametros.add(par);
+                String[] aParametros = getParametrosUnidos().split(DIVISOR_PARAMETROS);
+                for (String par : aParametros)
+                {
+                    Parametros.add(par);
+                }
+            }
+            else
+            {
+                Parametros.add(getParametrosUnidos());
             }
         }
     }

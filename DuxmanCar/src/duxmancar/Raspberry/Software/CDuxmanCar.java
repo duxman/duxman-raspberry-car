@@ -5,11 +5,15 @@
  */
 package duxmancar.Raspberry.Software;
 
+import com.pi4j.io.gpio.GpioController;
 import duxmancar.Datos.CDato;
+import duxmancar.Datos.Procesadores.CPuenteHControl;
 import duxmancar.Datos.Procesadores.CServoControl;
 import duxmancar.Net.CBtServer;
 import duxmancar.Net.CNetServer;
 import duxmancar.Raspberry.Hardware.CGestorI2CAdafruit;
+import duxmancar.Raspberry.Hardware.CMotorControlPuenteH;
+import duxmancar.Raspberry.Hardware.CMotorDC;
 import duxmancar.util.IDatosGenerales;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,15 +27,17 @@ import org.apache.log4j.Logger;
 public class CDuxmanCar extends Thread implements IDatosGenerales
 {
 
-    private final Boolean bFin;
-    private final CBtServer BtServer;
-    private final CNetServer NetServer;
-    private final Logger m_log;
+    private Boolean bFin;
+    private CBtServer BtServer;
+    private CNetServer NetServer;
+    private Logger m_log;
     private List<String> m_listaMsg;
     private int SistemaConectado;
     private CServoControl servoControl;
+    private CPuenteHControl dcControl;
+    private GpioController m_gpio;
 
-    public CDuxmanCar(CGestorI2CAdafruit oControladorServos) throws Exception
+    public void create() throws Exception
     {
         m_log = Logger.getRootLogger();
 
@@ -50,6 +56,18 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
         SistemaConectado = NINGUNO;
 
         m_log.info("Creamos Controlador Servo");
+    }
+
+    public CDuxmanCar(GpioController gpio) throws Exception
+    {
+        create();
+        dcControl = new CPuenteHControl(gpio);                
+
+    }
+
+    public CDuxmanCar(CGestorI2CAdafruit oControladorServos) throws Exception
+    {
+        create();
         servoControl = new CServoControl(oControladorServos);
     }
 
@@ -59,8 +77,9 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
         BtServer.initServer();
         m_log.info("Iniciamos Sockect");
         NetServer.initServer();
-        m_log.info("Iniciamos Runner");
+        m_log.info("Iniciamos Runner");        
         this.start();
+        dcControl.start();       
     }
 
     @Override public void run()
@@ -78,18 +97,19 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
                 catch (Exception ex)
                 {
                     m_log.error(ex);
+                    ex.printStackTrace();
                 }
                 compruebaConexion();
             }
             else
             {
                 m_log.info("Sin conexión comprobamos ");
-                if (NetServer.getConectado())
+                if ( NetServer.getConectado() )
                 {
                     m_log.info("Conectado Sockect");
                     SistemaConectado = TIPO_CONEXION.NET.ordinal();
                 }
-                else
+                else if( BtServer.getConectado() )
                 {
                     m_log.info("Conectado Bluetooth");
                     SistemaConectado = TIPO_CONEXION.BLUE.ordinal();
@@ -155,6 +175,11 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
         {
             m_log.info("Enviamos a servoControl");
             servoControl.addDato(dato);
+        }
+        else if (Destino == eDestinos.DCCONTROL.ordinal())
+        {
+            m_log.info("Enviamos a DCControl");            
+            dcControl.addDato(dato);
         }
 
         return rtn;
