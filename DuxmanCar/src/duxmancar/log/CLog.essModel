@@ -1,0 +1,121 @@
+[Box: ::duxmancar.Net - ::<<Unknown>>::Thread]
+X=302
+Y=39
+Visible=0
+
+[Box: ::duxmancar.Net - ::duxmancar.Net::CBtServer]
+X=19
+Y=125
+
+[Box: ::duxmancar.Net - ::duxmancar.Net::CNetServer]
+X=25
+Y=344
+
+[Box: ::duxmancar.Net - ::duxmancar.Net::CSocketMulticast]
+X=565
+Y=228
+
+[Box: ::duxmancar.Net - ::duxmancar.Net::CSocketServer]
+X=307
+Y=103
+
+[Box: ::duxmancar.Net - ::duxmancar.Net::CSocketServer.CHiloEntrada]
+X=568
+Y=126
+
+[Box: ::duxmancar.Net - ::duxmancar.util::IDatosGenerales]
+X=305
+Y=556
+
+[Diagram: ::duxmancar.Net]
+OffsetX=0
+OffsetY=0
+Visibility=0
+ShowAssoc=0
+
+[Box: ::duxmancar.Datos - ::duxmancar.Datos::CDato]
+X=282
+Y=37
+
+[Box: ::duxmancar.Datos - ::duxmancar.Datos::CDatoProvider]
+X=30
+Y=40
+
+[Box: ::duxmancar.Datos - ::duxmancar.util::IDatosGenerales]
+X=275
+Y=294
+
+[Diagram: ::duxmancar.Datos]
+OffsetX=0
+OffsetY=0
+Visibility=0
+ShowAssoc=0
+
+[Box: ::duxmancar.Raspberry.Hardware - ::<<Unknown>>::I2CDevice]
+X=225
+Y=219
+
+[Box: ::duxmancar.Raspberry.Hardware - ::duxmancar.Raspberry.Hardware::CGestorGPIO]
+X=220
+Y=401
+
+[Box: ::duxmancar.Raspberry.Hardware - ::duxmancar.Raspberry.Hardware::CGestorI2CAdafruit]
+X=222
+Y=31
+
+[Box: ::duxmancar.Raspberry.Hardware - ::duxmancar.Raspberry.Hardware::CGestorI2CSincronizado]
+X=18
+Y=27
+
+[Box: ::duxmancar.Raspberry.Hardware - ::duxmancar.Raspberry.Hardware::CGpioPines]
+X=22
+Y=584
+
+[Box: ::duxmancar.Raspberry.Hardware - ::duxmancar.Raspberry.Hardware::CMedidorDistancia]
+X=16
+Y=396
+
+[Box: ::duxmancar.Raspberry.Hardware - ::duxmancar.Raspberry.Hardware::CMotorControlPuenteH]
+X=231
+Y=577
+
+[Box: ::duxmancar.Raspberry.Hardware - ::duxmancar.Raspberry.Hardware::CMotorDC]
+X=444
+Y=584
+
+[Box: ::duxmancar.Raspberry.Hardware - ::duxmancar.Raspberry.Hardware::L298NTest]
+X=438
+Y=347
+
+[Box: ::duxmancar.Raspberry.Hardware - ::duxmancar.util::IDatosI2C]
+X=432
+Y=27
+
+[Diagram: ::duxmancar.Raspberry.Hardware]
+OffsetX=37
+OffsetY=0
+Visibility=0
+ShowAssoc=0
+
+[Box: ::duxmancar.Raspberry.Hardware.Vision - ::<<Unknown>>::Thread]
+X=224
+Y=40
+
+[Box: ::duxmancar.Raspberry.Hardware.Vision - ::duxmancar.Raspberry.Hardware.Vision::CCamara]
+X=17
+Y=40
+
+[Box: ::duxmancar.Raspberry.Hardware.Vision - ::duxmancar.Raspberry.Hardware.Vision::CCirculos]
+X=20
+Y=291
+
+[Box: ::duxmancar.Raspberry.Hardware.Vision - ::duxmancar.Raspberry.Hardware.Vision::CDetectarCirculos]
+X=225
+Y=291
+
+[Diagram: ::duxmancar.Raspberry.Hardware.Vision]
+OffsetX=0
+OffsetY=0
+Visibility=0
+ShowAssoc=0
+
