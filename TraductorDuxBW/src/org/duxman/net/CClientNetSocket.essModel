@@ -1,0 +1,72 @@
+[Box: ::org.duxman.net - ::<<Unknown>>::Runnable]
+X=24
+Y=113
+
+[Box: ::org.duxman.net - ::<<Unknown>>::Thread]
+X=19
+Y=175
+
+[Box: ::org.duxman.net - ::org.duxman.net::CBlueService]
+X=446
+Y=40
+
+[Box: ::org.duxman.net - ::org.duxman.net::CBlueService.AcceptThread]
+X=8
+Y=292
+
+[Box: ::org.duxman.net - ::org.duxman.net::CBlueService.ConnectedThread]
+X=239
+Y=466
+
+[Box: ::org.duxman.net - ::org.duxman.net::CBlueService.ConnectThread]
+X=235
+Y=306
+
+[Box: ::org.duxman.net - ::org.duxman.net::CClientNetSocket]
+X=13
+Y=415
+
+[Box: ::org.duxman.net - ::org.duxman.net::CServidorNetSockect]
+X=228
+Y=40
+
+[Box: ::org.duxman.net - ::org.duxman.net::CServidorNetSockect.CServerThread]
+X=20
+Y=40
+
+[Box: ::org.duxman.net - ::org.duxman.net::CTelegrama]
+X=673
+Y=40
+
+[Box: ::org.duxman.net - ::org.duxman.net::CUtilsNet]
+X=19
+Y=692
+
+[Box: ::org.duxman.net - ::org.duxman.util::CConstantes]
+X=442
+Y=431
+
+[Diagram: ::org.duxman.net]
+OffsetX=0
+OffsetY=0
+Visibility=0
+ShowAssoc=0
+
+[Box: ::org.duxman.util - ::org.duxman.net::CTelegrama]
+X=244
+Y=52
+
+[Box: ::org.duxman.util - ::org.duxman.util::CConstantes]
+X=1
+Y=57
+
+[Box: ::org.duxman.util - ::org.duxman.util::CTelegramasTraductror]
+X=12
+Y=455
+
+[Diagram: ::org.duxman.util]
+OffsetX=0
+OffsetY=0
+Visibility=0
+ShowAssoc=0
+

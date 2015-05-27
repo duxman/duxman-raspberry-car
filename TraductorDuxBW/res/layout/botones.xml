@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >        
+
+        <Button
+            android:id="@+id/buttonAdelante"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_above="@+id/buttonIzquierda"
+            android:layout_centerHorizontal="true"
+            android:text="@string/BotonArriba" />
+
+        <Button
+            android:id="@+id/buttonIzquierda"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/buttonAdelante"
+            android:text="@string/BotonIzquierda" />
+
+        <Button
+            android:id="@+id/buttonDerecha"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_alignBaseline="@+id/buttonIzquierda"
+            android:layout_alignBottom="@+id/buttonIzquierda"
+            android:layout_toRightOf="@+id/buttonAdelante"
+            android:text="@string/BotonDerecha" />
+
+        <Button
+            android:id="@+id/buttonAtras"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/buttonDerecha"
+            android:layout_toLeftOf="@+id/buttonDerecha"
+            android:text="@string/BotonAtras" />
+
+        <Button
+            android:id="@+id/ButtonStop"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/buttonAdelante"
+            android:layout_toLeftOf="@+id/buttonDerecha"
+            android:text="@string/botonStop" />
+    </RelativeLayout>
+
+
