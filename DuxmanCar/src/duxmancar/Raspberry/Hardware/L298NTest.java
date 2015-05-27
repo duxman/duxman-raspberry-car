@@ -4,12 +4,14 @@
  */
 package duxmancar.Raspberry.Hardware;
 
+import duxmancar.Raspberry.Hardware.ControlMotores.CMotorControlPuenteH;
+import duxmancar.Raspberry.Hardware.Sensores.Distancia.CMedidorDistancia;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioProvider;
 import duxmancar.CProperties;
-import duxmancar.Raspberry.Hardware.Vision.CCirculos;
-import duxmancar.Raspberry.Hardware.Vision.CDetectarCirculos;
+import duxmancar.Raspberry.Hardware.Sensores.Vision.CCirculos;
+import duxmancar.Raspberry.Hardware.Sensores.Vision.CDetectarCirculos;
 import duxmancar.log.CLog;
 //import duxmancar.Raspberry.Hardware.Vision.DetectarCirculos;
 import java.util.Scanner;

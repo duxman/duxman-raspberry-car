@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Raspberry.Hardware;
+package duxmancar.Raspberry.Hardware.GPIO;
 
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
@@ -22,6 +22,6 @@ public class CGpioPines
   public static Pin GPIO_PIN2_MOTOR_IZQ = RaspiPin.GPIO_23; //pin 33 fisico
   public static Pin GPIO_PWM_MOTOR_IZQ = RaspiPin.GPIO_24; //pin 35 fisico
   
-  public static Pin GPIO_PIN_TRIGGER = RaspiPin.GPIO_02; //pin 16 fisico 
-  public static Pin GPIO_PIN_HECHO = RaspiPin.GPIO_00; //pin 18 fisico
+  public static int GPIO_PIN_TRIGGER = 27;
+  public static int GPIO_PIN_HECHO = 17;
 }

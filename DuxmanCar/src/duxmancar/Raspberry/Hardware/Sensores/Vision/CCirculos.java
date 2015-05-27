@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Raspberry.Hardware.Vision;
+package duxmancar.Raspberry.Hardware.Sensores.Vision;
 
 /**
  *

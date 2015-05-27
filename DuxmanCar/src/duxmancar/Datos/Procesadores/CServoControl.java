@@ -7,7 +7,7 @@ package duxmancar.Datos.Procesadores;
 
 import duxmancar.Datos.CDato;
 import duxmancar.CProperties;
-import duxmancar.Raspberry.Hardware.CGestorI2CAdafruit;
+import duxmancar.Raspberry.Hardware.ControlMotores.CGestorI2CAdafruit;
 import duxmancar.util.IDatosGenerales;
 
 /**
@@ -53,7 +53,7 @@ public class CServoControl extends CProcesadorDatosProvider implements IDatosGen
         }
         else
         {
-            String sVelocidad = dato.Parametros.get(0);
+            String sVelocidad = dato.m_lParametros.get(0);
             int parametroVelocidad = Integer.valueOf(sVelocidad).intValue();
 
             if (Accion == eAccionesServo.ARRIBA.ordinal())

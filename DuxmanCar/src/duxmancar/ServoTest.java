@@ -6,7 +6,7 @@
 package duxmancar;
 
 import com.pi4j.io.i2c.I2CBus;
-import duxmancar.Raspberry.Hardware.CGestorI2CAdafruit;
+import duxmancar.Raspberry.Hardware.ControlMotores.CGestorI2CAdafruit;
 import duxmancar.log.CLog;
 import java.util.Scanner;
 import org.apache.log4j.Logger;

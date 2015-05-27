@@ -8,7 +8,7 @@ import duxmancar.util.IDatosGenerales;
 public class CDato extends CDatoProvider implements IDatosGenerales
 {
 
-    public List<String> Parametros;
+    public List<String> m_lParametros;
     public eEstadoDato Estado;
 
     /**
@@ -26,15 +26,21 @@ public class CDato extends CDatoProvider implements IDatosGenerales
      *
      * @return
      */
-    public String CodificaMensaje()
-    {
-        Parametros = Collections.synchronizedList(new ArrayList<String>());
+  
+    public static String CodificaMensaje(int iId, int iOrigen, int iDestino, int iAccion, int... iParametros)
+    {        
+        
         StringBuffer sRtn = new StringBuffer();
-        sRtn.append(String.format("%04d", getId()));
-        sRtn.append(String.format("%04d", getOrigen()));
-        sRtn.append(String.format("%04d", getDestino()));
-        sRtn.append(String.format("%04d", getAccion()));
-        sRtn.append(CodificarParametros());
+        sRtn.append(INI_DATOS);
+        sRtn.append(String.format("%04d", iId));
+        sRtn.append(String.format("%04d", iOrigen));
+        sRtn.append(String.format("%04d", iDestino));
+        sRtn.append(String.format("%04d", iAccion));
+        for(int par : iParametros)
+        {
+             sRtn.append(par).append(DIVISOR_PARAMETROS);
+        }       
+        sRtn.append(FIN_DATOS);
         return sRtn.toString();
     }
 
@@ -45,14 +51,14 @@ public class CDato extends CDatoProvider implements IDatosGenerales
     @Override public void DescodificaMensaje()
     {
         String datostemp= getDato().substring(INI_DATOS.length(),getDato().length()-FIN_DATOS.length());
-        Parametros = Collections.synchronizedList(new ArrayList<String>());
+        m_lParametros = Collections.synchronizedList(new ArrayList<String>());
         
         m_log.info("Dato a procesar ["+ datostemp + "]");
         setId(Integer.parseInt(datostemp.substring(POS_ID * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ID + 1))));
         setOrigen(Integer.parseInt(datostemp.substring(POS_ORIGEN * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ORIGEN + 1))));
         setDestino(Integer.parseInt(datostemp.substring(POS_DESTINO * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_DESTINO + 1))));
         setAccion(Integer.parseInt(datostemp.substring(POS_ACCION * LEN_PARAMETROS_FIJOS, LEN_PARAMETROS_FIJOS * (POS_ACCION + 1))));
-        setParametrosUnidos(datostemp.substring(12, datostemp.length()));
+        setParametrosUnidos(datostemp.substring(POS_PARAMETROS * LEN_PARAMETROS_FIJOS  , datostemp.length()));
         DescodificaParametros();
         m_log.info(toString());
         
@@ -70,19 +76,36 @@ public class CDato extends CDatoProvider implements IDatosGenerales
      */
     private void DescodificaParametros()
     {
-        synchronized (Parametros)
+        synchronized (m_lParametros)
         {
-            if(getParametrosUnidos().contains(DIVISOR_PARAMETROS) )
+            if(getParametrosUnidos().contains("|") )
             {
-                String[] aParametros = getParametrosUnidos().split(DIVISOR_PARAMETROS);
-                for (String par : aParametros)
+                int iInicio = 0;
+                String parametros = getParametrosUnidos();
+                m_log.info( "Parametros unidos : " + parametros );
+                while(iInicio < parametros.length()  )
                 {
-                    Parametros.add(par);
-                }
+                    int iFin =  parametros.indexOf("|",iInicio);           
+                    if(iFin == -1 )
+                    {
+                        iFin =  parametros.length();
+                    }
+                                        
+                    m_log.info("Separador encontrado en " + parametros + " posicion  desde "+ iInicio + " hasta " + iFin );                    
+                    
+                    String par = parametros.substring(iInicio,iFin);                    
+                    
+                    m_lParametros.add(par);
+                                        
+                    m_log.info("Parametro " + m_lParametros.size() + " : " + par );                    
+                    
+                    iInicio=iFin+1;
+                                                                                                  
+                }                
             }
             else
             {
-                Parametros.add(getParametrosUnidos());
+                m_lParametros.add(getParametrosUnidos());
             }
         }
     }
@@ -100,7 +123,7 @@ public class CDato extends CDatoProvider implements IDatosGenerales
         String sRtn = "";
         try
         {
-            for (String par : Parametros)
+            for (String par : m_lParametros)
             {
                 sb.append(par).append(DIVISOR_PARAMETROS);
             }

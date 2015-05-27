@@ -5,6 +5,7 @@
  */
 package duxmancar.Net;
 
+import duxmancar.Datos.CListaDatosProvider;
 import duxmancar.util.IDatosGenerales;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -37,7 +38,8 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
 
     protected String m_sServerName;
 
-    private List<String> m_listaMsg;
+    //private List<String> m_listaMsg;
+    CListaDatosProvider m_listaMsg;
 
     public boolean compruebaFinal(String sDato)
     {
@@ -90,8 +92,8 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
         m_bConectado = new Boolean(false);
         m_sDatosInput = "";
         m_sDatosOutput = "";
-
-        m_listaMsg = Collections.synchronizedList(new ArrayList<String>());
+        
+        m_listaMsg =  CListaDatosProvider.getInstance();        
     }
 
     protected void creaBufferStream(InputStream input, OutputStream output) throws Exception
@@ -210,26 +212,12 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
 
     private synchronized void addMensajeEntrada(String sDato) throws Exception
     {
-
-        while (m_listaMsg.size() == MAX_MENSAJES)
-        {
-            wait();
-        }
-        m_log.info("Añadido MSG :" + sDato);
-        m_listaMsg.add(sDato);
-        notifyAll();
+        m_listaMsg.addMensajeEntrada(sDato);        
     }
 
     public synchronized String getMensaje() throws Exception
-    {
-        notifyAll();
-        while (m_listaMsg.size() == 0)
-        {
-            wait();
-        }
-        String sRtn = m_listaMsg.get(0);
-        m_listaMsg.remove(0);
-        return sRtn;
+    {        
+        return  m_listaMsg.getMensaje();
     }
 
     protected class CHiloEntrada extends Thread

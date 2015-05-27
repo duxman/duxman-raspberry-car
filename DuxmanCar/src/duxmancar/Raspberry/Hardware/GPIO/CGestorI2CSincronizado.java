@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Raspberry.Hardware;
+package duxmancar.Raspberry.Hardware.GPIO;
 
 import com.pi4j.io.i2c.I2CDevice;
 import java.util.concurrent.locks.Lock;

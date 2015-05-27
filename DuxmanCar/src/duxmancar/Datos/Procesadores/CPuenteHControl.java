@@ -8,8 +8,8 @@ package duxmancar.Datos.Procesadores;
 import com.pi4j.io.gpio.GpioController;
 import duxmancar.CProperties;
 import duxmancar.Datos.CDato;
-import duxmancar.Raspberry.Hardware.CMotorControlPuenteH;
-import static duxmancar.Raspberry.Hardware.CMotorControlPuenteH.VELOCIDAD_GIRO_3;
+import duxmancar.Raspberry.Hardware.ControlMotores.CMotorControlPuenteH;
+import static duxmancar.Raspberry.Hardware.ControlMotores.CMotorControlPuenteH.VELOCIDAD_GIRO_3;
 import duxmancar.util.IDatosGenerales;
 
 /**
@@ -57,7 +57,7 @@ public class CPuenteHControl  extends CProcesadorDatosProvider implements IDatos
         }
         else
         {
-            String sVelocidad = dato.Parametros.get(0);
+            String sVelocidad = dato.m_lParametros.get(0);
             int parametroVelocidad = Integer.valueOf(sVelocidad).intValue();
 
             if (Accion == eAccionesServo.ARRIBA.ordinal())
@@ -81,6 +81,14 @@ public class CPuenteHControl  extends CProcesadorDatosProvider implements IDatos
             {
                 m_log.info("giramos izquierda " + sVelocidad);
                 m_gestorMotoresDc.girarIzquierda(VELOCIDAD_GIRO_3);
+            }
+            if (Accion == eAccionesServo.RUEDAS.ordinal())
+            {
+                String sVelocidadIzq = dato.m_lParametros.get(1);
+                int parametroVelocidadIzq = Integer.valueOf(sVelocidadIzq).intValue();
+                m_log.info("giramos Derecha " + sVelocidad);
+                m_log.info("giramos Izquierda " + sVelocidadIzq);                                
+                m_gestorMotoresDc.girarRuedas(parametroVelocidad,parametroVelocidadIzq);
             }
         }
     }

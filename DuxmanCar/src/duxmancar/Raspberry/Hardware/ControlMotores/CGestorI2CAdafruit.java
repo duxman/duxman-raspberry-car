@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Raspberry.Hardware;
+package duxmancar.Raspberry.Hardware.ControlMotores;
 
+import duxmancar.Raspberry.Hardware.GPIO.CGestorI2CSincronizado;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CFactory;
 import duxmancar.util.IDatosI2C;

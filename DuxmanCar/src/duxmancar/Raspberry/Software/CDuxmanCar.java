@@ -6,14 +6,14 @@
 package duxmancar.Raspberry.Software;
 
 import com.pi4j.io.gpio.GpioController;
+import duxmancar.Automatico.CConduccionAutonoma;
 import duxmancar.Datos.CDato;
+import duxmancar.Datos.CListaDatosProvider;
 import duxmancar.Datos.Procesadores.CPuenteHControl;
 import duxmancar.Datos.Procesadores.CServoControl;
 import duxmancar.Net.CBtServer;
 import duxmancar.Net.CNetServer;
-import duxmancar.Raspberry.Hardware.CGestorI2CAdafruit;
-import duxmancar.Raspberry.Hardware.CMotorControlPuenteH;
-import duxmancar.Raspberry.Hardware.CMotorDC;
+import duxmancar.Raspberry.Hardware.ControlMotores.CGestorI2CAdafruit;
 import duxmancar.util.IDatosGenerales;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +36,8 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
     private CServoControl servoControl;
     private CPuenteHControl dcControl;
     private GpioController m_gpio;
+    private CListaDatosProvider m_listaDatosProvider;
+    private CConduccionAutonoma m_automatico;
 
     public void create() throws Exception
     {
@@ -56,6 +58,12 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
         SistemaConectado = NINGUNO;
 
         m_log.info("Creamos Controlador Servo");
+        
+        m_listaDatosProvider = CListaDatosProvider.getInstance();
+        m_log.info("Obtenemos instancia del proveedor de datos");
+        
+        m_automatico  = new CConduccionAutonoma();
+                
     }
 
     public CDuxmanCar(GpioController gpio) throws Exception
@@ -145,18 +153,12 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
     {
         String msg = "";
 
-        if (SistemaConectado == TIPO_CONEXION.BLUE.ordinal())
+        if ( SistemaConectado != NINGUNO )
         {
-            msg = BtServer.getMensaje();
-            m_log.info("Dato Bluetooth : " + msg);
-        }
-        else if (SistemaConectado == TIPO_CONEXION.NET.ordinal())
-        {
-            msg = NetServer.getMensaje();
-            m_log.info("Dato Sockect : " + msg);
+            msg = m_listaDatosProvider.getMensaje();            
         }
 
-        if (!msg.isEmpty())
+        if (msg.isEmpty() == false)
         {
             procesaDatos(msg);
             msg = "";
@@ -181,7 +183,19 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
             m_log.info("Enviamos a DCControl");            
             dcControl.addDato(dato);
         }
-
+        else if( Destino ==  eDestinos.AUTO.ordinal() )
+        {
+            m_log.info("Enviamos a Control Automatico");            
+            if( dato.getAccion() == eAccionesCon.CONECTAR.ordinal() )
+            {
+                m_automatico.setSalir( false );
+                m_automatico.start();
+            }
+            else if( dato.getAccion() == eAccionesCon.DESCONECTAR.ordinal() )
+            {
+                m_automatico.setSalir( true );                
+            }                        
+        }
         return rtn;
     }
 

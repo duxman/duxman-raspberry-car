@@ -1,4 +1,4 @@
-package duxmancar.Raspberry.Hardware.Vision;
+package duxmancar.Raspberry.Hardware.Sensores.Vision;
 
 
 import org.opencv.core.Mat;

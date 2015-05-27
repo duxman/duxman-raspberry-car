@@ -38,8 +38,7 @@ public interface IDatosGenerales
         DESCONECTAR (1),
         DAME        (2),
         PON         (3),
-        MANDAR      (4);
-        
+        MANDAR      (4);        
         private final int m_value;
         private eAccionesCon(int value)
         {
@@ -52,7 +51,8 @@ public interface IDatosGenerales
         IZQUIERDA   (1),
         ARRIBA      (2),
         ABAJO       (3),
-        STOP        (4);
+        STOP        (4),
+        RUEDAS      (5);
         private final int m_value;
         private eAccionesServo(int value)
         {
@@ -60,6 +60,9 @@ public interface IDatosGenerales
         };                
         
     };
+    
+    public enum eMovimientosAutonomos {ADELANTE,ATRAS,DERECHA,IZQUIERDA,STOP,GIRO};
+    
     public static enum eAccionesled     
     {
         ONROJO(0),OFFROJO(1),ONVERDE(2),OFFVERDE(3),ONAZUL(4),OFFAZUL(5),ALLOFF(6),ALLON(7);
@@ -90,7 +93,7 @@ public interface IDatosGenerales
     };
     public static enum eDestinos	
     {
-        RASPBERRY(0),CONTROLADOR(1),SERVOCONTROL(2),LEDCONTROL(3),CAMCONTROL(4),DCCONTROL(5);
+        RASPBERRY(0),CONTROLADOR(1),SERVOCONTROL(2),LEDCONTROL(3),CAMCONTROL(4),DCCONTROL(5), AUTO(6);
         private final int m_value;
         private eDestinos(int value)
         {

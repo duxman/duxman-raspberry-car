@@ -1,11 +1,11 @@
 /* 
  * 2014 Jose Cruz <joseacruzp@gmail.com>.
  */
-package duxmancar.Raspberry.Hardware;
+package duxmancar.Raspberry.Hardware.Sensores.Distancia;
 
+import duxmancar.Raspberry.Hardware.Sensores.CSensor;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import jdk.dio.DeviceManager;
 import jdk.dio.gpio.GPIOPin;
 import jdk.dio.gpio.GPIOPinConfig;
@@ -15,7 +15,7 @@ import jdk.dio.gpio.GPIOPinConfig;
  *
  * @author Jose Cruz
  */
-public class CMedidorDistancia
+public class CMedidorDistancia extends CSensor
 {
 
     private final int PULSE = 10000;        // #10us pulse 10.000 ns
@@ -23,6 +23,7 @@ public class CMedidorDistancia
 
     private GPIOPin trigger = null;
     private GPIOPin echo = null;
+    private double m_distanciaMedia;
     
     /**
      * Inicialize GPIO to echo and trigger pins
@@ -32,6 +33,7 @@ public class CMedidorDistancia
      */
     public CMedidorDistancia(int _trigger, int _echo) throws Exception
     {
+        m_log = Logger.getRootLogger();
         try
         {
             // define device for trigger pin
@@ -47,7 +49,7 @@ public class CMedidorDistancia
         }
         catch (IOException ex)
         {
-            Logger.getGlobal().log(Level.WARNING, ex.getMessage());
+            m_log.error(ex.getMessage());
         }
     }
 
@@ -81,7 +83,7 @@ public class CMedidorDistancia
         }
         catch (IOException ex)
         {
-            Logger.getGlobal().log(Level.WARNING, ex.getMessage());
+            m_log.error(ex.getMessage());
         }
         return distance / 2.0 / (1000000000L); // cm/s
     }
@@ -101,7 +103,39 @@ public class CMedidorDistancia
         }
         catch (IOException ex)
         {
-            Logger.getGlobal().log(Level.WARNING, ex.getMessage());
+            m_log.error(ex.getMessage());
         }
     }
+
+    @Override
+    public void medir()
+    {
+        double dTotalMediciones=0; 
+        double dMedicion=0;
+        for(int i =0 ; i< NUMERO_MEDICIONES ; i++)
+        {
+            try
+            {
+                dMedicion = pulse();
+                dTotalMediciones += dMedicion;
+                m_log.info("Distancia pulso " +  i + " es " + dMedicion );
+            }
+            catch (Exception ex)
+            {
+               m_log.error(ex.getMessage());
+            }
+        }
+
+        m_distanciaMedia = dTotalMediciones / NUMERO_MEDICIONES;                
+        m_log.info("Distancia media de " +  NUMERO_MEDICIONES + " es " + m_distanciaMedia );
+    }
+
+    /**
+     * @return the m_distanciaMedia
+     */
+    public double getDistanciaMedia()
+    {
+        return m_distanciaMedia;
+    }
+    
 }

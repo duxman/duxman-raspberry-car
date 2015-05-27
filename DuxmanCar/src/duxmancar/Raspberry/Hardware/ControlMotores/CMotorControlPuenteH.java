@@ -2,10 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Raspberry.Hardware;
+package duxmancar.Raspberry.Hardware.ControlMotores;
 
+import duxmancar.Raspberry.Hardware.GPIO.CGpioPines;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.wiringpi.Gpio;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -101,6 +103,25 @@ public class CMotorControlPuenteH
     {
       m_motorIzq.marchaMotor (false, 45);
       m_motorDer.marchaMotor (true, 45);
-    }
+    }        
   }
+  
+  public void girarRuedas(int iDer, int iIzq)
+  {
+      boolean delanteDer = true,delanteIzq = true;
+      
+      if( iDer < 0)      
+      {      
+          delanteDer = false;
+      }
+      
+      if( iIzq < 0 )
+      {       
+          delanteIzq = false;
+      }      
+      
+      m_motorDer.marchaMotor(delanteDer, abs(iDer));
+      m_motorIzq.marchaMotor(delanteIzq, abs(iIzq));      
+  }
+  
 }

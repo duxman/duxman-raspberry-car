@@ -8,8 +8,8 @@ package duxmancar;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.i2c.I2CBus;
-import duxmancar.Raspberry.Hardware.CGestorGPIO;
-import duxmancar.Raspberry.Hardware.CGestorI2CAdafruit;
+import duxmancar.Raspberry.Hardware.GPIO.CGestorGPIO;
+import duxmancar.Raspberry.Hardware.ControlMotores.CGestorI2CAdafruit;
 import duxmancar.Raspberry.Software.CDuxmanCar;
 import duxmancar.log.CLog;
 import org.apache.log4j.Logger;
@@ -43,6 +43,8 @@ public class DuxmanCar
     {
         try
         {
+            
+            
             DuxmanCarProperties = new CProperties("DuxmanCar.properties");
 
             m_estado = ESTADO_SERVICIO.START;
@@ -52,7 +54,8 @@ public class DuxmanCar
 
             //oControladorServos = new CGestorI2CAdafruit(CProperties.PUERTO_CONTROLADOR_SERVOS, CProperties.FREQ_CONTROLADOR_SERVOS);
             oGpio = new CGestorGPIO();
-                    
+            m_log.info("Cargada libreria opencv");
+            System.load("/home/pi/v1/lib/libopencv_java300.so" );                        
             
             m_log.info("Inicio Aplicacion");
             CDuxmanCar duxmanCar = new CDuxmanCar(oGpio.dameGPIOController());

@@ -3,29 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package duxmancar.Raspberry.Hardware.Vision;
+package duxmancar.Raspberry.Hardware.Sensores.Vision;
+
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author duxman
  */
-public class CDetectarCirculos extends Thread
-{
-    CCamara m_camara;
+public class CDetectarCirculos extends CDetectorObstaculos
+{    
     public CDetectarCirculos()
     {
-        m_camara = new CCamara();
-        m_camara.iniciaCamara(0);
+        super(); 
+        m_log = Logger.getRootLogger();
     }
     
-    public void callDetectar()
+    @Override   public void callDetectar()
     {
-        m_camara.detectarCirculos();    
-    }
-    
-    public void run()
-    {
-        callDetectar();
-    }
-    
+        m_log.info(" Circulos ");
+        m_camara.detectarCirculos();            
+    }           
 }
