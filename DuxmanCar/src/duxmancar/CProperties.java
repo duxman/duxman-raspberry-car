@@ -34,6 +34,11 @@ public class CProperties
    public static  String    FICHERO_LOG         =   "DuxmanCar.log";
    public static  int       MAX_SIZE_LOG        =    10000;
    public static  int       MAX_FILES_LOG       =    5;
+   public static  String    HAAR_DERECHA        =    "HarrDerecha.xml";
+   public static  String    HAAR_IZQUIERDA      =    "HarrIzquierda.xml";
+   public static  String    HAAR_STOP           =    "HarrStop.xml";
+   public static  String    HAAR_ATRAS          =    "HarrAtras.xml";
+   
    
    
    
@@ -67,6 +72,13 @@ public class CProperties
            FICHERO_LOG           = prop.getProperty("FICHERO_LOG","./DuxmanCar.log");
            MAX_SIZE_LOG          = Integer.valueOf(prop.getProperty("POS_MIN_DELANTE","10000"));
            MAX_FILES_LOG         = Integer.valueOf(prop.getProperty("POS_MIN_DETRAS","5"));           
+           
+           HAAR_DERECHA           = prop.getProperty("HAAR_DERECHA","HarrDerecha.xml");
+           HAAR_IZQUIERDA         = prop.getProperty("HAAR_IZQUIERDA","HarrIzquierda.xml");
+           HAAR_STOP              = prop.getProperty("HAAR_STOP","HarrStop.xml");
+           HAAR_ATRAS             = prop.getProperty("HAAR_ATRAS","HarrAtras.xml");
+           
+           
                       
            
         }

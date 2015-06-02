@@ -22,8 +22,19 @@ public class CMotorControlPuenteH
   private GpioController m_gpio;
   private CMotorDC m_motorIzq;
   private CMotorDC m_motorDer;
+  
+  private static CMotorControlPuenteH instance = null;
+  
+  public static CMotorControlPuenteH getInstance()
+  {
+      if(instance == null )
+      {
+          instance = new CMotorControlPuenteH();
+      }
+      return instance;
+  }
 
-  public CMotorControlPuenteH ()
+  private CMotorControlPuenteH ()
   {
   }
 

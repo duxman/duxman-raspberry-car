@@ -15,13 +15,13 @@ public class CDetectarCirculos extends CDetectorObstaculos
 {    
     public CDetectarCirculos()
     {
-        super(); 
+        super();
         m_log = Logger.getRootLogger();
     }
     
     @Override   public void callDetectar()
     {
         m_log.info(" Circulos ");
-        m_camara.detectarCirculos();            
+        m_camara.detectarCirculos();
     }           
 }

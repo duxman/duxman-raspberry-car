@@ -22,8 +22,9 @@ public class CMotorDC
   private GpioPinDigitalOutput m_motorPwm;
   private int m_iSoftPwmId;
   private boolean m_bSoftPwm;
-
-  public CMotorDC (GpioController gpio, Pin pin1, Pin pin2, Pin Pwm, boolean bSoftPwm)
+  private static CMotorDC instance=null;
+    
+  public  CMotorDC (GpioController gpio, Pin pin1, Pin pin2, Pin Pwm, boolean bSoftPwm)
   {
     m_bSoftPwm = bSoftPwm;
     if (m_bSoftPwm == true)

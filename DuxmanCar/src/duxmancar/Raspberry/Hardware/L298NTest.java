@@ -10,7 +10,7 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioProvider;
 import duxmancar.CProperties;
-import duxmancar.Raspberry.Hardware.Sensores.Vision.CCirculos;
+import duxmancar.Raspberry.Hardware.Sensores.Vision.CObstaculo;
 import duxmancar.Raspberry.Hardware.Sensores.Vision.CDetectarCirculos;
 import duxmancar.log.CLog;
 //import duxmancar.Raspberry.Hardware.Vision.DetectarCirculos;
@@ -46,7 +46,7 @@ public class L298NTest
         //System.load("/home/pi/v1/lib/libdio.so");
         m_sensorDistancia =  new CMedidorDistancia(27,17);
         System.out.print ("Probamos PWM SOFT");
-        m_motores = new CMotorControlPuenteH ();
+        m_motores = CMotorControlPuenteH.getInstance();
         m_motores.inicializa (GPIO_CONTROLLER, true);
         
         System.load("/home/pi/v1/lib/libopencv_java300.so" );                        
@@ -178,7 +178,7 @@ public class L298NTest
         if (comando.equals ("C"))
         {                     
             m_circulos.callDetectar();
-            m_log.info(CCirculos.texto());
+            m_log.info(CObstaculo.texto());
         }   
       }       
     }

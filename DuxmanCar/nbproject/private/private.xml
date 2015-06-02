@@ -3,12 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Net/CBtServer.java</file>
-            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Datos/CDato.java</file>
-            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Net/CNetServer.java</file>
-            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Datos/CListaDatosProvider.java</file>
+            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/CProperties.java</file>
+            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Raspberry/Hardware/Sensores/Vision/CCamara.java</file>
+            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Raspberry/Hardware/Sensores/Vision/CDetectarFormas.java</file>
+            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Raspberry/Software/CDuxmanCar.java</file>
             <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Automatico/CConduccionAutonoma.java</file>
-            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Net/CSocketServer.java</file>
+            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Raspberry/Hardware/ControlMotores/CMotorDC.java</file>
+            <file>file:/home/duxman/git/duxman-raspberry-car/DuxmanCar/src/duxmancar/Raspberry/Hardware/Sensores/Vision/CObstaculo.java</file>
         </group>
     </open-files>
 </project-private>

@@ -30,7 +30,8 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
     private BufferedWriter m_bfOutput = null;
     private String m_sDatosOutput;
     private String m_sDatosInput;
-    protected CHiloEntrada m_hiloEntrada;
+    protected CHiloEntrada  m_hiloEntrada;
+    protected CHiloSalida   m_hiloSalida;
 
     protected Boolean m_bSalir;
     protected Boolean m_bConectado;
@@ -106,8 +107,10 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
 
             m_log.info("Creada salida de fichero");
             m_bfOutput = new BufferedWriter(new OutputStreamWriter(output));
+            m_hiloSalida = new CHiloSalida();
 
             m_hiloEntrada.start();
+            m_hiloSalida.start();
         }
         catch (Exception e)
         {
@@ -239,6 +242,35 @@ public abstract class CSocketServer extends Thread implements IDatosGenerales
                     if (compruebaFinal(sDatosTemp))
                     {
                         addMensajeEntrada(getDatosEntrada());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    m_log.error(ex);
+                }
+            }
+
+        }
+    }
+    
+    protected class CHiloSalida extends Thread
+    {
+
+        public CHiloSalida()
+        {
+            super(m_sServerName + "_SALIDA");
+        }
+
+        @Override public void run()
+        {
+            while (!getSalir())
+            {
+                try
+                {
+                    String Salida = m_listaMsg.getMensajeSalida();
+                    if(Salida.equals("") == false)
+                    {
+                        m_bfOutput.write(Salida);
                     }
                 }
                 catch (Exception ex)

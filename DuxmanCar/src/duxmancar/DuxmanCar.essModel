@@ -1,0 +1,39 @@
+[Box: ::duxmancar.Net - ::<<Unknown>>::Thread]
+X=213
+Y=459
+
+[Box: ::duxmancar.Net - ::duxmancar.Net::CBtServer]
+X=319
+Y=256
+
+[Box: ::duxmancar.Net - ::duxmancar.Net::CNetServer]
+X=327
+Y=58
+
+[Box: ::duxmancar.Net - ::duxmancar.Net::CSocketMulticast]
+X=551
+Y=134
+
+[Box: ::duxmancar.Net - ::duxmancar.Net::CSocketServer]
+X=23
+Y=33
+
+[Box: ::duxmancar.Net - ::duxmancar.Net::CSocketServer.CHiloEntrada]
+X=445
+Y=525
+
+[Box: ::duxmancar.Net - ::duxmancar.Net::CSocketServer.CHiloSalida]
+X=41
+Y=530
+
+[Box: ::duxmancar.Net - ::duxmancar.util::IDatosGenerales]
+X=574
+Y=367
+Visible=0
+
+[Diagram: ::duxmancar.Net]
+OffsetX=0
+OffsetY=0
+Visibility=0
+ShowAssoc=0
+

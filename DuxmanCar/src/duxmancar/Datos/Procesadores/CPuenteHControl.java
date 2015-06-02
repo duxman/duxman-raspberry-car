@@ -21,10 +21,10 @@ public class CPuenteHControl  extends CProcesadorDatosProvider implements IDatos
     private final CMotorControlPuenteH m_gestorMotoresDc;
     private GpioController m_gpio;
     
-    public CPuenteHControl(  GpioController gpio)
+    public CPuenteHControl(  GpioController gpio )
     {
         super();
-        m_gestorMotoresDc = new CMotorControlPuenteH();
+        m_gestorMotoresDc = CMotorControlPuenteH.getInstance();
         m_gestorMotoresDc.inicializa(gpio, true);
         m_gpio = gpio;
         

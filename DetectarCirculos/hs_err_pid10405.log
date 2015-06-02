@@ -1,0 +1,98 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGFPE (0x8) at pc=0x00007f22b851c7af, pid=10405, tid=139786289280768
+#
+# JRE version: OpenJDK Runtime Environment (7.0_75-b13) (build 1.7.0_75-b13)
+# Java VM: OpenJDK 64-Bit Server VM (24.75-b04 mixed mode linux-amd64 compressed oops)
+# Derivative: IcedTea 2.5.4
+# Distribution: Ubuntu 14.04 LTS, package 7u75-2.5.4-1~trusty1
+# Problematic frame:
+# C  [libopencv_java2410.so+0x41c7af]  cv::inRange(cv::_InputArray const&, cv::_InputArray const&, cv::_InputArray const&, cv::_OutputArray const&)+0x42f
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please include
+# instructions on how to reproduce the bug and visit:
+#   http://icedtea.classpath.org/bugzilla
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f22900ac000):  JavaThread "Thread-0" [_thread_in_native, id=10439, stack(0x00007f22880df000,0x00007f22881e0000)]
+
+siginfo:si_signo=SIGFPE: si_errno=0, si_code=1 (FPE_INTDIV), si_addr=0x00007f22b851c7af
+
+Registers:
+RAX=0x00000000000003ff, RBX=0x00007f22881de730, RCX=0x0000000000000006, RDX=0x0000000000000000
+RSP=0x00007f22881dd0b0, RBP=0x0000000000010000, RSI=0x0000000000000000, RDI=0x0000000000000006
+R8 =0x0000000000000004, R9 =0x0000000000000000, R10=0x00007f22881de450, R11=0x00007f22b851c380
+R12=0x0000000000020000, R13=0x0000000000000001, R14=0x0000000000000001, R15=0x0000000000000000
+RIP=0x00007f22b851c7af, EFLAGS=0x0000000000010246, CSGSFS=0x0000000000000033, ERR=0x0000000000000000
+  TRAPNO=0x0000000000000000
+
+Top of Stack: (sp=0x00007f22881dd0b0)
+0x00007f22881dd0b0:   00007f22881dd270 00007f22fd0783a9
+0x00007f22881dd0c0:   0000000000000000 00007f2200000008
+0x00007f22881dd0d0:   00007f22fd078301 00007f22881de730
+0x00007f22881dd0e0:   00007f22900ac000 0000000000000000
+0x00007f22881dd0f0:   00007f22881dd8b0 00007f22fccf6efe
+0x00007f22881dd100:   00007f22e0076c68 00007f22900ac1d8
+0x00007f22881dd110:   00007f2200000000 00007f22881dd8f8
+0x00007f22881dd120:   00007f22e0076c78 00007f22881dd4a0
+0x00007f22881dd130:   00007f22e0076c80 00007f22881dd440
+0x00007f22881dd140:   0000003001010010 00007f22881de000
+0x00007f22881dd150:   00007f22881dd3e0 000000078da3cb90
+0x00007f22881dd160:   00007f22881dd930 0000000000000000
+0x00007f22881dd170:   00007f22e0076ca8 000000078e80c2c0
+0x00007f22881dd180:   00007f2200000000 0000000000000079
+0x00007f22881dd190:   00007f2278071988 00007f22881dd0b0
+0x00007f22881dd1a0:   00007f22e0076cc8 00007f22900abe90
+0x00007f22881dd1b0:   00007f22a4008d30 00007f22a4000140
+0x00007f22881dd1c0:   00007f22a4009118 00007f22881dd178
+0x00007f22881dd1d0:   00007f22881dd1b9 0000000800000001
+0x00007f22881dd1e0:   00007f22e0076b00 00007f22e0076ca0
+0x00007f22881dd1f0:   00007f2200000000 0000000000000000
+0x00007f22881dd200:   00007f22881ddbd0 00007f22881dd120
+0x00007f22881dd210:   00007f22881dda08 00007f22f10062b3
+0x00007f22881dd220:   00007f22f1005310 0000000700000000
+0x00007f22881dd230:   00007f22881dda98 00007f22881dda40
+0x00007f22881dd240:   00007f22900ac000 0000005000000000
+0x00007f22881dd250:   000000000000001a 0000000000000000
+0x00007f22881dd260:   0000000000000728 00007f22a4008d40
+0x00007f22881dd270:   00007f22881dd920 00007f22f10062b3
+0x00007f22881dd280:   00007f22f1005310 00007f2200000000
+0x00007f22881dd290:   00007f22881dd980 00007f22881dd930
+0x00007f22881dd2a0:   00007f22900ac000 00007f22f4018140 
+
+Instructions: (pc=0x00007f22b851c7af)
+0x00007f22b851c78f:   03 00 00 48 63 d6 48 8b 44 d0 f8 48 89 44 24 38
+0x00007f22b851c79f:   48 05 ff 03 00 00 31 d2 48 8b 5c 24 28 45 31 c9
+0x00007f22b851c7af:   48 f7 74 24 38 41 b8 ff ff ff ff 31 c9 48 8b 94
+0x00007f22b851c7bf:   24 70 03 00 00 48 89 df 49 89 c4 48 8b 03 c7 04 
+
+Register to memory mapping:
+
+RAX=0x00000000000003ff is an unknown value
+RBX=0x00007f22881de730 is pointing into the stack for thread: 0x00007f22900ac000
+RCX=0x0000000000000006 is an unknown value
+RDX=0x0000000000000000 is an unknown value
+RSP=0x00007f22881dd0b0 is pointing into the stack for thread: 0x00007f22900ac000
+RBP=0x0000000000010000 is an unknown value
+RSI=0x0000000000000000 is an unknown value
+RDI=0x0000000000000006 is an unknown value
+R8 =0x0000000000000004 is an unknown value
+R9 =0x0000000000000000 is an unknown value
+R10=0x00007f22881de450 is pointing into the stack for thread: 0x00007f22900ac000
+R11=0x00007f22b851c380: _ZN2cv7inRangeERKNS_11_InputArrayES2_S2_RKNS_12_OutputArrayE+0 in /home/duxman/git/duxman-raspberry-car/DetectarCirculos/lib/libopencv_java2410.so at 0x00007f22b8100000
+R12=0x0000000000020000 is an unknown value
+R13=0x0000000000000001 is an unknown value
+R14=0x0000000000000001 is an unknown value
+R15=0x0000000000000000 is an unknown value
+
+
+Stack: [0x00007f22880df000,0x00007f22881e0000],  sp=0x00007f22881dd0b0,  free space=1016k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libopencv_java2410.so+0x41c7af]  cv::inRange(cv::_InputArray const&, cv::_InputArray const&, cv::_InputArray const&, cv::_OutputArray const&)+0x42f

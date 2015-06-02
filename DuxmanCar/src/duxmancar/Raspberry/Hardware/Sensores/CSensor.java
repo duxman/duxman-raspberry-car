@@ -5,6 +5,7 @@
  */
 package duxmancar.Raspberry.Hardware.Sensores;
 
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -13,17 +14,34 @@ import org.apache.log4j.Logger;
  */
 public abstract class CSensor extends Thread
 {    
+    public static enum eSensor {NINGUNO,DISTANCIA,VISION};
     public static int NUMERO_MEDICIONES = 10;
+    
+    protected eSensor m_tipoSesor;           
     protected Logger  m_log;
+    
     public CSensor()
     {
         m_log = Logger.getRootLogger();
+        m_tipoSesor = eSensor.NINGUNO;
     }
     
     @Override  public  void run()
     {
-        medir();
+        try
+        {
+            medir();
+        }
+        catch (Exception ex)
+        {
+           m_log.error(ex.getMessage());
+        }
     }    
     
-    public abstract void medir();
+    public eSensor getTipoSensor()
+    {
+        return m_tipoSesor; 
+    }
+    
+    public abstract void medir() throws Exception;
 }

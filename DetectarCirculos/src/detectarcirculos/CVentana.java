@@ -14,7 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
-import static org.opencv.imgcodecs.Imgcodecs.imencode;
+import static org.opencv.highgui.Highgui.imencode;
 
 /**
  *
@@ -31,7 +31,7 @@ public class CVentana extends javax.swing.JFrame
     public CVentana()
     {
         initComponents();
-        System.load("/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/dist/lib/libopencv_java300.so" );                        
+        System.load("/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/dist/lib/libopencv_java2410.so" );                        
         circulos = new DetectarCirculos(this);
         circulos.start();
     }

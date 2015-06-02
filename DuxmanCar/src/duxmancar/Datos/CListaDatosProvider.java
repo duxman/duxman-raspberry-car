@@ -21,6 +21,7 @@ public class CListaDatosProvider
     private static CListaDatosProvider instance = null;
     
     private List<String> m_listaMsg;
+    private List<String> m_listaMsgSalida;
     
     Logger m_log;
     
@@ -28,6 +29,7 @@ public class CListaDatosProvider
     {
         m_log = Logger.getRootLogger();
         m_listaMsg = Collections.synchronizedList(new ArrayList<String>());    
+        m_listaMsgSalida = Collections.synchronizedList(new ArrayList<String>());    
     }
     
     public static  CListaDatosProvider getInstance()
@@ -61,6 +63,30 @@ public class CListaDatosProvider
         }
         String sRtn = m_listaMsg.get(0);
         m_listaMsg.remove(0);
+        return sRtn;
+    }
+    
+    public synchronized void addMensajeSalida(String sDato) throws Exception
+    {
+
+        while (m_listaMsgSalida.size() == MAX_MENSAJES)
+        {
+            wait();
+        }
+        m_log.info("Añadido MSG  SALIDA:" + sDato);
+        m_listaMsgSalida.add(sDato);
+        notify();
+    }
+     
+    public synchronized String getMensajeSalida() throws Exception
+    {
+        notify();
+        while (m_listaMsgSalida.size() == 0)
+        {
+            wait();
+        }
+        String sRtn = m_listaMsgSalida.get(0);
+        m_listaMsgSalida.remove(0);
         return sRtn;
     }
     
