@@ -10,8 +10,10 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioProvider;
 import duxmancar.CProperties;
+import static duxmancar.CProperties.HAAR_DERECHA;
 import duxmancar.Raspberry.Hardware.Sensores.Vision.CObstaculo;
 import duxmancar.Raspberry.Hardware.Sensores.Vision.CDetectarCirculos;
+import duxmancar.Raspberry.Hardware.Sensores.Vision.CDetectarFormas;
 import duxmancar.log.CLog;
 //import duxmancar.Raspberry.Hardware.Vision.DetectarCirculos;
 import java.util.Scanner;
@@ -32,7 +34,7 @@ public class L298NTest
   final static GpioController GPIO_CONTROLLER = GpioFactory.getInstance ();
   final static GpioProvider GPIO_PROVIDER = GpioFactory.getDefaultProvider ();
   static int velocidad=25;
-  static CDetectarCirculos m_circulos;
+  static CDetectarFormas m_formas;
   static Logger m_log;
   static CMedidorDistancia m_sensorDistancia;
   public static void main (String[] args)
@@ -49,8 +51,8 @@ public class L298NTest
         m_motores = CMotorControlPuenteH.getInstance();
         m_motores.inicializa (GPIO_CONTROLLER, true);
         
-        System.load("/home/pi/v1/lib/libopencv_java300.so" );                        
-        m_circulos = new CDetectarCirculos();
+        System.load("/home/pi/v1/lib/libopencv_java2410.so" );                        
+        m_formas = new CDetectarFormas();
         pruebas ();
     }
     catch(Exception e)
@@ -176,9 +178,18 @@ public class L298NTest
         }        
         
         if (comando.equals ("C"))
-        {                     
-            m_circulos.callDetectar();
-            m_log.info(CObstaculo.texto());
+        {   while (comando.equals ("Q") == false)
+            {                  
+                m_formas.callDetectar(CProperties.HAAR_DERECHA,CObstaculo.eSimbolo.DERECHA);
+                m_formas.callDetectar(CProperties.HAAR_IZQUIERDA,CObstaculo.eSimbolo.IZQUIERDA);
+                m_formas.callDetectar(CProperties.HAAR_STOP,CObstaculo.eSimbolo.PARO);
+                m_log.info(CObstaculo.texto());
+                
+                if (sc.hasNextLine ())
+                {
+                    comando = sc.nextLine ().toUpperCase ();
+                }
+            }
         }   
       }       
     }

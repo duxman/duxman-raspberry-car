@@ -1,4 +1,4 @@
-package jduxmancarvision.OpenCV;
+package duxmancar.Raspberry.Hardware.Sensores.Vision;
 
 //***************************************************************//
 //* Blob analysis package  Version3.0 3 Oct 2012                *//

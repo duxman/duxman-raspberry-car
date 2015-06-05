@@ -6,6 +6,7 @@
 package duxmancar.Automatico;
 
 import duxmancar.CProperties;
+import duxmancar.Datos.CDato;
 import duxmancar.Datos.CListaDatosProvider;
 import duxmancar.Datos.CTelegramasAutomatico;
 import duxmancar.Raspberry.Hardware.ControlMotores.CMotorControlPuenteH;
@@ -89,9 +90,11 @@ public class CConduccionAutonoma extends Thread implements IDatosGenerales
          {
               if( m_medidorDistancia.getDistanciaMedia() <= DISTANACIA_MINIMA )
               {
+                 m_listaDatosProvider.addMensajeSalida(CDato.CodificaMensajeInfo(CObstaculo.hayObstaculoCentro(), m_medidorDistancia.getDistanciaMedia()));
+                 
                  if( CObstaculo.hayObstaculoCentro() != CObstaculo.eSimbolo.DERECHA )
                  {
-                      m_log.info("Giramos Derecha");
+                      m_log.info("Giramos Derecha");                      
                       //m_listaDatosProvider.addMensajeEntrada( CTelegramasAutomatico.dameDato( eMovimientosAutonomos.DERECHA ,40 ) );                    
                       m_gestorMotoresDc.girarRuedas(-40, 40);
                       Thread.sleep( TIEMPO_EJECUCION  );
@@ -184,7 +187,7 @@ public class CConduccionAutonoma extends Thread implements IDatosGenerales
          
          m_detectorObstaculos.callDetectar(CProperties.HAAR_DERECHA , CObstaculo.eSimbolo.DERECHA );                        
          m_detectorObstaculos.callDetectar(CProperties.HAAR_IZQUIERDA , CObstaculo.eSimbolo.IZQUIERDA );                        
-         m_detectorObstaculos.callDetectar(CProperties.HAAR_ATRAS , CObstaculo.eSimbolo.ATRAS );                        
+         //m_detectorObstaculos.callDetectar(CProperties.HAAR_ATRAS , CObstaculo.eSimbolo.ATRAS );                        
          m_detectorObstaculos.callDetectar(CProperties.HAAR_STOP , CObstaculo.eSimbolo.PARO );                        
          
          m_log.info(CObstaculo.texto() );

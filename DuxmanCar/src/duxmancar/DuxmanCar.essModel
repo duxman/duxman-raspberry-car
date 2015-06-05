@@ -37,3 +37,37 @@ OffsetY=0
 Visibility=0
 ShowAssoc=0
 
+[Box: ::duxmancar.Raspberry.Hardware.Sensores.Vision - ::duxmancar.Raspberry.Hardware.Sensores::CSensor]
+X=20
+Y=40
+
+[Box: ::duxmancar.Raspberry.Hardware.Sensores.Vision - ::duxmancar.Raspberry.Hardware.Sensores.Vision::Blobs]
+X=568
+Y=41
+
+[Box: ::duxmancar.Raspberry.Hardware.Sensores.Vision - ::duxmancar.Raspberry.Hardware.Sensores.Vision::CCamara]
+X=30
+Y=247
+
+[Box: ::duxmancar.Raspberry.Hardware.Sensores.Vision - ::duxmancar.Raspberry.Hardware.Sensores.Vision::CDetectarCirculos]
+X=245
+Y=256
+
+[Box: ::duxmancar.Raspberry.Hardware.Sensores.Vision - ::duxmancar.Raspberry.Hardware.Sensores.Vision::CDetectarFormas]
+X=374
+Y=367
+
+[Box: ::duxmancar.Raspberry.Hardware.Sensores.Vision - ::duxmancar.Raspberry.Hardware.Sensores.Vision::CDetectorObstaculos]
+X=326
+Y=40
+
+[Box: ::duxmancar.Raspberry.Hardware.Sensores.Vision - ::duxmancar.Raspberry.Hardware.Sensores.Vision::CObstaculo]
+X=773
+Y=41
+
+[Diagram: ::duxmancar.Raspberry.Hardware.Sensores.Vision]
+OffsetX=0
+OffsetY=0
+Visibility=0
+ShowAssoc=0
+

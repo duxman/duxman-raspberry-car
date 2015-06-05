@@ -14,11 +14,9 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
-import org.opencv.videoio.VideoCapture;
-import static org.opencv.videoio.Videoio.CAP_PROP_FRAME_HEIGHT;
-import static org.opencv.videoio.Videoio.CAP_PROP_FRAME_WIDTH;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -66,9 +64,7 @@ public class  CCamara extends CSensor
                 m_camara = new VideoCapture(iId);
 
                 if (m_camara.isOpened() == true)
-                {
-                    m_camara.set(CAP_PROP_FRAME_WIDTH, 320);
-                    m_camara.set(CAP_PROP_FRAME_HEIGHT, 240);
+                {                    
                     m_iIdCamara = iId;
                     iRtn = 1;
                 }
@@ -150,7 +146,7 @@ public class  CCamara extends CSensor
         {
             double[] circle = circles.get(0, i);
             Point pCentro = new Point(circle[0], circle[1]);            
-            Imgproc.circle(m_ultimaImagen, pCentro, (int) circle[2]- 10 , new Scalar(0, 255, 0),10);
+            Core.circle(m_ultimaImagen, pCentro, (int) circle[2]- 10 , new Scalar(0, 255, 0),10);
         }
         return m_ultimaImagen;
     }

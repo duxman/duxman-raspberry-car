@@ -3,18 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package detectarcirculos;
+package camarajavacv2;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import static org.opencv.imgcodecs.Imgcodecs.imencode;
+import org.bytedeco.javacpp.opencv_core.IplImage;
+import org.bytedeco.javacv.CanvasFrame;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.Java2DFrameConverter;
+import org.bytedeco.javacv.OpenCVFrameConverter;
 
 /**
  *
@@ -25,17 +31,73 @@ public class CVentana extends javax.swing.JFrame
 
     /**
      * Creates new form Ventana
-     */
-    static DetectarCirculos circulos;
-    
-    public CVentana()
+     */   
+    static Cprocesar p;
+    public CVentana() throws Exception
     {
         initComponents();
-        System.load("/home/duxman/git/duxman-raspberry-car/JDuxmanCarVision/dist/lib/libopencv_java300.so" );                        
-        circulos = new DetectarCirculos(this);
-        circulos.start();
+        System.load("/home/duxman/git/duxman-raspberry-car/DetectarCirculos/lib/libopencv_java2410.so" );    
+               
+       // System.load("/home/duxman/git/duxman-raspberry-car/DetectarCirculos/lib/libopencv_java2410.so" );                                
+       
     }
 
+    public  class Cprocesar extends Thread
+    {                        
+        CCamara camara= new CCamara();
+        Java2DFrameConverter coverterBuff = new Java2DFrameConverter();
+        OpenCVFrameConverter.ToIplImage converterIpl  = new OpenCVFrameConverter.ToIplImage();
+        CanvasFrame frame1;
+        CanvasFrame frame2;
+        public Cprocesar()
+        {
+            frame1 = new CanvasFrame("imagen");
+            frame2 = new CanvasFrame("imagen");
+            
+        }
+        public void run()
+        {
+            while(true)
+            {
+                try
+                {
+                    int LH = iLH.getValue();
+                    int LS = iLS.getValue();
+                    int LV = iLV.getValue();
+                    
+                    int HH = iHH.getValue();
+                    int HS = iHS.getValue();
+                    int HV = iHV.getValue();
+                    
+                    String sH = String.valueOf(LH ) + "-" + String.valueOf( HH );
+                    String sS = String.valueOf(LS ) + "-" + String.valueOf( HS );
+                    String sV = String.valueOf(LV ) + "-" + String.valueOf( HV );
+                    
+                    lH.setText(sH);
+                    lS.setText(sS);
+                    lV.setText(sV);
+                    
+                    Thread.sleep(100);
+                    
+                    
+                    camara.capturar();
+                    
+                    IplImage imgprocesada = camara.procesar( camara.m_imagen ,LH,LS,LV,HH,HS,HV );
+                    frame2.showImage( converterIpl.convert(camara.m_imagen) );
+                    //IplImage imgprocesada = camara.cascade();
+                    frame1.showImage(converterIpl.convert( imgprocesada ));
+                    
+                    
+                }
+                catch (Exception ex)
+                {
+                    // Logger.getLogger(CVentana.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,29 +108,229 @@ public class CVentana extends javax.swing.JFrame
     private void initComponents()
     {
 
-        imagen = new javax.swing.JLabel();
+        iLH = new javax.swing.JSlider();
+        iLS = new javax.swing.JSlider();
+        iLV = new javax.swing.JSlider();
+        iHH = new javax.swing.JSlider();
+        iHS = new javax.swing.JSlider();
+        iHV = new javax.swing.JSlider();
+        jButton1 = new javax.swing.JButton();
+        lH = new javax.swing.JLabel();
+        lV = new javax.swing.JLabel();
+        lS = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        iLH.setMaximum(255);
+        iLH.setValue(0);
+
+        iLS.setMaximum(255);
+        iLS.setValue(0);
+
+        iLV.setMaximum(255);
+        iLV.setValue(0);
+
+        iHH.setMaximum(255);
+        iHH.setPaintLabels(true);
+        iHH.setPaintTicks(true);
+        iHH.setSnapToTicks(true);
+        iHH.setToolTipText("");
+        iHH.setValue(180);
+
+        iHS.setMaximum(255);
+        iHS.setValue(255);
+
+        iHV.setMaximum(255);
+        iHV.setSnapToTicks(true);
+        iHV.setToolTipText("");
+        iHV.setValue(85);
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        lH.setText("jLabel1");
+
+        lV.setText("jLabel1");
+
+        lS.setText("jLabel1");
+
+        jButton2.setText("Verde");
+        jButton2.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Rojo");
+        jButton3.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Azul");
+        jButton4.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("amarillo");
+        jButton5.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(iLS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(iLV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(iLH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(iHV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(iHS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(iHH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lS, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lV, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lH, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(44, 44, 44)
+                                .addComponent(jButton1))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton5)
+                .addGap(74, 74, 74)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(iLH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(iLS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(iLV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(iHH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lH, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(iHS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lS, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(iHV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lV, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
+    {//GEN-HEADEREND:event_jButton1ActionPerformed
+        
+        p = new Cprocesar();
+        p.start();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton2ActionPerformed
+    {//GEN-HEADEREND:event_jButton2ActionPerformed
+        iLH.setValue(0);
+        iHH.setValue(255);
+        
+        iLS.setValue(60);
+        iHS.setValue(255);
+        
+        iLV.setValue(173);
+        iHV.setValue(234);
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton3ActionPerformed
+    {//GEN-HEADEREND:event_jButton3ActionPerformed
+        iLH.setValue(0);
+        iHH.setValue(213);
+        
+        iLS.setValue(114);
+        iHS.setValue(164);
+        
+        iLV.setValue(186);
+        iHV.setValue(255);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton4ActionPerformed
+    {//GEN-HEADEREND:event_jButton4ActionPerformed
+        iLH.setValue(0);
+        iHH.setValue(96);
+        
+        iLS.setValue(136);
+        iHS.setValue(237);
+        
+        iLV.setValue(180);
+        iHV.setValue(238);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton5ActionPerformed
+    {//GEN-HEADEREND:event_jButton5ActionPerformed
+        iLH.setValue(72);
+        iHH.setValue(87);
+        
+        iLS.setValue(28);
+        iHS.setValue(164);
+        
+        iLV.setValue(108);
+        iHV.setValue(255);        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -116,46 +378,44 @@ public class CVentana extends javax.swing.JFrame
         {
             public void run()
             {
-                new CVentana().setVisible(true);
+                try
+                {
+                    new CVentana().setVisible(true);                    
+                    
+                }
+                catch (Exception ex)
+                {
+                    Logger.getLogger(CVentana.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });        
         
         
     }
         
-    public void setImage(Mat imagen, JLabel etiqueta)
+    public void setImage(BufferedImage imagen, JLabel etiqueta)
     {
-        ImageIcon icon = new ImageIcon(convertir(imagen).getScaledInstance(320, 240, Image.SCALE_SMOOTH));
+        ImageIcon icon = new ImageIcon( (Image) imagen );
         etiqueta.setIcon(icon);
         etiqueta.updateUI();
     }
-    
-    public JLabel getLabelImagen()
-    {
-        return imagen;
-    }
-    
-    private Image convertir(Mat imagen) 
-    {
-        MatOfByte matOfByte = new MatOfByte();
-        imencode(".jpg", imagen, matOfByte); 
-
-        byte[] byteArray = matOfByte.toArray();
-        BufferedImage bufImage = null;
-
-        try 
-        {
-
-            InputStream in = new ByteArrayInputStream(byteArray);
-            bufImage = ImageIO.read(in);
-        } 
-        catch (Exception e) 
-        {        
-        }
-        return (Image)bufImage;
-    }
+        
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel imagen;
+    private javax.swing.JSlider iHH;
+    private javax.swing.JSlider iHS;
+    private javax.swing.JSlider iHV;
+    private javax.swing.JSlider iLH;
+    private javax.swing.JSlider iLS;
+    private javax.swing.JSlider iLV;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JLabel lH;
+    private javax.swing.JLabel lS;
+    private javax.swing.JLabel lV;
     // End of variables declaration//GEN-END:variables
 }
+

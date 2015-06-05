@@ -9,7 +9,7 @@ package duxmancar.Raspberry.Hardware.Sensores.Vision;
  *
  * @author duxman
  */
-public class CCirculos
+public class CObstaculo
 {
     public static int POSICION_IZQ = 0;
     public static int POSICION_CEN = 1;
@@ -18,36 +18,85 @@ public class CCirculos
     public static int PIXEL_IZQ = 106;
     public static int PIXEL_CEN = 214;
     public static int PIXEL_DER = 320;
-    
-    private static boolean[] m_circulos = {false,false,false};
-        
-    public static void setCirculo(boolean izq, boolean cen, boolean der) 
+    public static enum eSimbolo 
     {
-        synchronized(m_circulos)
+        DERECHA,IZQUIERDA,PARO,ATRAS,NONE,OTRO;
+        
+        @Override public String toString()
         {
-            m_circulos[POSICION_IZQ] = izq;
-            m_circulos[POSICION_DER] = der;
-            m_circulos[POSICION_CEN] = cen;
+            String rtn = "NONE";
+            switch(this)
+            {
+                case DERECHA:
+                {
+                    rtn = "DERECHA";
+                    break;
+                }
+                case IZQUIERDA:
+                {
+                    rtn = "IZQUIERDA";
+                    break;
+                }
+                case PARO:
+                {
+                    rtn = "PARO";
+                    break;
+                }
+                case ATRAS:
+                {
+                    rtn = "ATRAS";
+                    break;
+                }
+                case OTRO:
+                {
+                    rtn = "OTRO";
+                    break;
+                }
+                    
+            }
+            return rtn;
+        }
+    };
+    
+    private static eSimbolo[] m_obstaculos = {eSimbolo.NONE,eSimbolo.NONE,eSimbolo.NONE};
+        
+    public static void setObstaculo() 
+    {
+        synchronized(m_obstaculos)
+        {
+            m_obstaculos[POSICION_IZQ] = eSimbolo.NONE;
+            m_obstaculos[POSICION_DER] = eSimbolo.NONE;
+            m_obstaculos[POSICION_CEN] = eSimbolo.NONE;
         }
     }
     
-    public static boolean  hayCirculoCentro()
+    public static void setObstaculo(eSimbolo izq, eSimbolo cen, eSimbolo der) 
     {
-        return m_circulos[POSICION_CEN];
+        synchronized(m_obstaculos)
+        {
+            m_obstaculos[POSICION_IZQ] = izq;
+            m_obstaculos[POSICION_DER] = der;
+            m_obstaculos[POSICION_CEN] = cen;
+        }
     }
     
-    public static boolean  hayCirculoDerecha()
+    public static eSimbolo  hayObstaculoCentro()
     {
-        return m_circulos[POSICION_DER];
+        return m_obstaculos[POSICION_CEN];
     }
     
-    public static boolean  hayCirculoIzquierda()
+    public static eSimbolo  hayObstaculoDerecha()
     {
-        return m_circulos[POSICION_IZQ];
+        return m_obstaculos[POSICION_DER];
+    }
+    
+    public static eSimbolo  hayObstaculoIzquierda()
+    {
+        return m_obstaculos[POSICION_IZQ];
     }
     
     public static String texto()
     {        
-        return "DERECHA : " + ( (m_circulos[POSICION_DER]) ? "SI": "NO" ) + " CENTRO : " + ( (m_circulos[POSICION_CEN]) ? "SI": "NO" ) + " IZQUIERDA : " + ( (m_circulos[POSICION_IZQ]) ? "SI": "NO" );
+        return "DERECHA : " + ( (m_obstaculos[POSICION_DER]!= eSimbolo.NONE) ? "SI": "NO" ) + " CENTRO : " + ( (m_obstaculos[POSICION_CEN]!= eSimbolo.NONE) ? "SI": "NO" ) + " IZQUIERDA : " + ( (m_obstaculos[POSICION_IZQ]!= eSimbolo.NONE) ? "SI": "NO" );
     }
 }

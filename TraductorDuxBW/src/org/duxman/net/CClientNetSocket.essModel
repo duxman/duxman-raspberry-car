@@ -70,3 +70,72 @@ OffsetY=0
 Visibility=0
 ShowAssoc=0
 
+[Box: ::org.duxman.Gui - ::org.duxman.net::CBlueService]
+X=1312
+Y=1165
+
+[Box: ::org.duxman.Gui - ::org.duxman.net::CClientNetSocket]
+X=240
+Y=1572
+
+[Box: ::org.duxman.Gui - ::org.duxman.net::CServidorNetSockect]
+X=1094
+Y=1165
+
+[Box: ::org.duxman.Gui - ::org.duxman.util::CTelegramasTraductror]
+X=893
+Y=1875
+
+[Box: ::org.duxman.Gui - ::org.duxman.util.list::CArrayAdapterBTDevices]
+X=1736
+Y=1165
+
+[Box: ::org.duxman.Gui - ::org.duxman.util.list::CConexionItem]
+X=889
+Y=1165
+
+[Box: ::org.duxman.Gui - ::<<Unknown>>::Activity]
+X=444
+Y=40
+
+[Box: ::org.duxman.Gui - ::<<Unknown>>::OnClickListener]
+X=314
+Y=1165
+Visible=0
+
+[Box: ::org.duxman.Gui - ::<<Unknown>>::OnTouchListener]
+X=754
+Y=1165
+Visible=0
+
+[Box: ::org.duxman.Gui - ::<<Unknown>>::SurfaceHolder.Callback]
+X=959
+Y=1165
+Visible=0
+
+[Box: ::org.duxman.Gui - ::org.duxman.Gui::CBLueClient]
+X=780
+Y=121
+
+[Box: ::org.duxman.Gui - ::org.duxman.Gui::CConectarNet]
+X=329
+Y=121
+
+[Box: ::org.duxman.Gui - ::org.duxman.Gui::CTecladoTelegramas]
+X=570
+Y=121
+
+[Box: ::org.duxman.Gui - ::org.duxman.Gui::DeviceListActivity]
+X=25
+Y=121
+
+[Box: ::org.duxman.Gui - ::org.duxman.util::CConstantes]
+X=326
+Y=337
+
+[Diagram: ::org.duxman.Gui]
+OffsetX=0
+OffsetY=0
+Visibility=0
+ShowAssoc=0
+

@@ -37,7 +37,7 @@ public class CProperties
    public static  String    HAAR_DERECHA        =    "HarrDerecha.xml";
    public static  String    HAAR_IZQUIERDA      =    "HarrIzquierda.xml";
    public static  String    HAAR_STOP           =    "HarrStop.xml";
-   public static  String    HAAR_ATRAS          =    "HarrAtras.xml";
+   //public static  String    HAAR_ATRAS          =    "HarrAtras.xml";
    
    
    
@@ -76,7 +76,7 @@ public class CProperties
            HAAR_DERECHA           = prop.getProperty("HAAR_DERECHA","HarrDerecha.xml");
            HAAR_IZQUIERDA         = prop.getProperty("HAAR_IZQUIERDA","HarrIzquierda.xml");
            HAAR_STOP              = prop.getProperty("HAAR_STOP","HarrStop.xml");
-           HAAR_ATRAS             = prop.getProperty("HAAR_ATRAS","HarrAtras.xml");
+           //HAAR_ATRAS             = prop.getProperty("HAAR_ATRAS","HarrAtras.xml");
            
            
                       

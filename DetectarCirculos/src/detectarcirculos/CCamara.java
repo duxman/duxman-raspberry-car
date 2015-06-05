@@ -18,8 +18,8 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.imgproc.Moments;
 import org.opencv.objdetect.CascadeClassifier;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -133,13 +133,13 @@ public class CCamara
         return m_ultimaImagen;
     }
 
-    public Mat detectarCirculos2(String sCascade)
+    public Mat detectarCirculos2(String titulo,String sCascade)
     {
         capturarImagen();
-        return detectarCirculos2(sCascade,m_ultimaImagen);                
+        return detectarCirculos2(titulo,sCascade,m_ultimaImagen);                
     }
     
-    public Mat detectarCirculos2(String sCascade, Mat img)
+    public Mat detectarCirculos2(String titulo , String sCascade, Mat img)
     {
         
         CascadeClassifier DetectorCirculos = new CascadeClassifier(sCascade);
@@ -149,7 +149,9 @@ public class CCamara
         
          for (Rect rect : Detections.toArray()) 
          {
-            Core.rectangle(img, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0, 255, 0));
+            Core.rectangle(m_ultimaImagen, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(255,0, 0), 3 );
+            Core.putText(m_ultimaImagen, titulo, new Point(rect.x, rect.y), Core.FONT_HERSHEY_COMPLEX_SMALL, 1.5,new Scalar(255,0, 0), 1 ) ;
+            
          }
          return m_ultimaImagen;
         

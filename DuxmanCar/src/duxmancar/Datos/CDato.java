@@ -1,5 +1,6 @@
 package duxmancar.Datos;
 
+import duxmancar.Raspberry.Hardware.Sensores.Vision.CObstaculo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +44,17 @@ public class CDato extends CDatoProvider implements IDatosGenerales
         sRtn.append(FIN_DATOS);
         return sRtn.toString();
     }
-
+    
+    public static String CodificaMensajeInfo( CObstaculo.eSimbolo simbolo, double distancia )
+    {        
+        
+        StringBuffer sRtn = new StringBuffer();
+        sRtn.append(INI_DATOS);
+        sRtn.append(simbolo.toString()).append(" a ");
+        sRtn.append(distancia).append(" Cm");        
+        sRtn.append(FIN_DATOS);
+        return sRtn.toString();
+    }
     /**
      * *
      * Descodifica el mesaje en los datos individuales
