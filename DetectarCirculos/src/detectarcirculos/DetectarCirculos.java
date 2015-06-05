@@ -33,7 +33,7 @@ public class DetectarCirculos extends Thread
             m_Camara.capturarImagen();
             m_Camara.detectarCirculos2("STOP","cascadeStop.xml", m_Camara.m_ultimaImagenGris);
             m_imagen =  m_Camara.detectarCirculos2("Triangulo","cascadeTriangulo.xml", m_Camara.m_ultimaImagenGris);
-            m_imagen =  m_Camara.detectarCirculos2("IZQUIERDA","cascade_stage_18.xml", m_Camara.m_ultimaImagen);
+            m_imagen =  m_Camara.detectarCirculos2("IZQUIERDA","cascade_stage_20.xml", m_Camara.m_ultimaImagen);
             //m_imagen =  m_Camara.detectarCirculos2("PARAR","cascade_parar.xml", m_Camara.m_ultimaImagen);
             //m_imagen =  m_Camara.detectarCirculos2("GIRO","cascade_giro.xml", m_Camara.m_ultimaImagen);
             if( m_imagen != null )
