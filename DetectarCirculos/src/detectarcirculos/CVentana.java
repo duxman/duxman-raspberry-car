@@ -16,6 +16,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import static org.opencv.highgui.Highgui.imencode;
 
+
 /**
  *
  * @author duxman

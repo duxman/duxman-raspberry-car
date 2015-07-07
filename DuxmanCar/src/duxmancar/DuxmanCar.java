@@ -55,7 +55,7 @@ public class DuxmanCar
             //oControladorServos = new CGestorI2CAdafruit(CProperties.PUERTO_CONTROLADOR_SERVOS, CProperties.FREQ_CONTROLADOR_SERVOS);
             oGpio = new CGestorGPIO();
             m_log.info("Cargada libreria opencv");
-            System.load("/home/pi/v1/lib/libopencv_java300.so" );                        
+            System.load("/home/pi/v1/lib/libopencv_java2410.so" );                        
             
             m_log.info("Inicio Aplicacion");
             CDuxmanCar duxmanCar = new CDuxmanCar(oGpio.dameGPIOController());

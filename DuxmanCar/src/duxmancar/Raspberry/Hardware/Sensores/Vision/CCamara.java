@@ -1,7 +1,10 @@
 package duxmancar.Raspberry.Hardware.Sensores.Vision;
 
 
+import duxmancar.CProperties;
 import duxmancar.Raspberry.Hardware.Sensores.CSensor;
+import static duxmancar.Raspberry.Hardware.Sensores.Vision.CObstaculo.ALTO_IMG;
+import static duxmancar.Raspberry.Hardware.Sensores.Vision.CObstaculo.ANCHO_IMG;
 import duxmancar.Raspberry.Hardware.Sensores.Vision.CObstaculo.eSimbolo;
 import duxmancar.util.IDatosGenerales;
 import java.util.ArrayList;
@@ -14,6 +17,8 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.highgui.Highgui;
+import static org.opencv.highgui.Highgui.imwrite;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
@@ -34,13 +39,22 @@ public class  CCamara extends CSensor
     private int m_iIdCamara = IDatosGenerales.NINGUNO;
     Mat m_ultimaImagen;
     Mat m_ultimaImagenGris;
-    
+    CascadeClassifier m_DetectorStop;
+    CascadeClassifier m_DetectorDerecha;
+    CascadeClassifier m_DetectorIzquierda;
+    CascadeClassifier m_DetectorAtras;
+    int m_imgNum =0;
     protected static CCamara instance = null;
 
     private  CCamara()
     {
         m_ultimaImagen= new Mat();
         m_ultimaImagenGris= new Mat();
+        m_DetectorStop = new CascadeClassifier(CProperties.HAAR_STOP);
+        m_DetectorDerecha = new CascadeClassifier(CProperties.HAAR_DERECHA);
+        m_DetectorIzquierda = new CascadeClassifier(CProperties.HAAR_IZQUIERDA);
+        m_DetectorAtras = new CascadeClassifier(CProperties.HAAR_ATRAS);
+        
     }
     
     public static CCamara getInstance()
@@ -66,6 +80,8 @@ public class  CCamara extends CSensor
                 if (m_camara.isOpened() == true)
                 {                    
                     m_iIdCamara = iId;
+                    m_camara.set(Highgui.CV_CAP_PROP_FRAME_WIDTH,ANCHO_IMG);
+                    m_camara.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT, ALTO_IMG);
                     iRtn = 1;
                 }
                 else
@@ -105,10 +121,14 @@ public class  CCamara extends CSensor
             {
                 Imgproc.cvtColor(m_ultimaImagen, m_ultimaImagenGris, Imgproc.COLOR_RGB2GRAY);
             }
+            else
+            {
+                m_log.error("Sin imagen");
+            }
         }
         catch (Exception e)
         {
-
+            m_log.error(e.getMessage());
         }
         finally
         {
@@ -175,6 +195,16 @@ public class  CCamara extends CSensor
     }
     
     private void ponObstaculos(Point pCentro, eSimbolo simbol)
+    {               
+        eSimbolo cen=  CObstaculo.hayObstaculoCentro();
+                   
+        if( pCentro.x > CObstaculo.PIXEL_IZQ && pCentro.x <= CObstaculo.PIXEL_DER && cen != simbol )
+            cen = simbol;    
+        
+        CObstaculo.setObstaculo(eSimbolo.NONE , cen, eSimbolo.NONE );
+    }
+    
+    private void ponObstaculosOld(Point pCentro, eSimbolo simbol)
     {
         eSimbolo izq = CObstaculo.hayObstaculoIzquierda();
         eSimbolo der=  CObstaculo.hayObstaculoDerecha();
@@ -205,18 +235,143 @@ public class  CCamara extends CSensor
     {
         boolean retorno = false;
         capturarImagen();
-        CascadeClassifier DetectorCirculos = new CascadeClassifier(sficheroHarr);
-        
-        MatOfRect Detections = new MatOfRect();
-        DetectorCirculos.detectMultiScale(m_ultimaImagen, Detections);
-        
-         for (Rect rect : Detections.toArray()) 
-         {
-            retorno = true;
-            ponObstaculos( dameCentro(rect), simbol );
-            //Core.rectangle(m_ultimaImagen, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0, 255, 0));
-         }
-         return retorno;        
+       
+        try
+        {
+
+            m_log.info(" detectando " + simbol.toString());
+            MatOfRect Detections = new MatOfRect();
+
+            if( simbol ==  eSimbolo.PARO )
+            {
+                m_DetectorStop.detectMultiScale(m_ultimaImagen, Detections);
+            }
+            else if( simbol ==  eSimbolo.DERECHA )
+            {
+                m_DetectorDerecha.detectMultiScale(m_ultimaImagen, Detections);
+            }
+            else if( simbol ==  eSimbolo.IZQUIERDA )
+            {
+                m_DetectorIzquierda.detectMultiScale(m_ultimaImagen, Detections);
+            }
+                       
+            //m_log.info("Fin detección " + simbol.toString());
+            for (Rect rect : Detections.toArray()) 
+            {
+                retorno = true;
+                ponObstaculos( dameCentro(rect), simbol );
+                Core.rectangle(m_ultimaImagen, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(255,0, 0), 3 );
+                Core.putText(m_ultimaImagen, simbol.toString(), new Point(rect.x, rect.y), Core.FONT_HERSHEY_COMPLEX_SMALL, 1.5,new Scalar(255,0, 0), 1 ) ;
+            }
+            imwrite( "./img/img_"+m_imgNum+".jpg" , m_ultimaImagen );
+            m_imgNum++;
+            m_log.info("Encontrados  " + Detections.size() + " objetos");
+            
+           
+       }
+       catch(Exception e)
+       {
+           m_log.error( e.getMessage() );
+       }
+       finally
+       {
+            return retorno;   
+       }             
+    }
+    
+    public Mat detectarFormas2(String titulo , String sCascade, Mat img)
+    {
+        try
+        {
+            CascadeClassifier DetectorCirculos = new CascadeClassifier(sCascade);
+
+            MatOfRect Detections = new MatOfRect();
+            DetectorCirculos.detectMultiScale(img, Detections);
+
+             for (Rect rect : Detections.toArray()) 
+             {
+                Core.rectangle(m_ultimaImagen, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(255,0, 0), 3 );
+                Core.putText(m_ultimaImagen, titulo, new Point(rect.x, rect.y), Core.FONT_HERSHEY_COMPLEX_SMALL, 1.5,new Scalar(255,0, 0), 1 ) ;
+             }
+
+             imwrite( "./img/img_"+m_imgNum+".jpg" , m_ultimaImagen );
+             m_imgNum++;             
+        }
+        catch(Exception e)
+        {
+            m_log.error(e.getMessage());
+        }
+        return m_ultimaImagen;
+    }
+    
+    public Mat detectarFormas3( boolean  grabar )
+    {
+        boolean encontrado = false;
+        try
+        {
+             MatOfRect Detections = new MatOfRect();
+             if( encontrado == false )
+             {         
+                m_DetectorStop.detectMultiScale(m_ultimaImagen, Detections);             
+                for (Rect rect : Detections.toArray()) 
+                {
+                   Core.rectangle(m_ultimaImagen, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(255,0, 0), 3 );
+                   Core.putText(m_ultimaImagen, eSimbolo.PARO.toString(), new Point(rect.x, rect.y), Core.FONT_HERSHEY_COMPLEX_SMALL, 1.5,new Scalar(255,0, 0), 1 ) ;
+                   encontrado = true;                
+                   ponObstaculos( dameCentro(rect), eSimbolo.PARO );                
+                }
+             }
+             
+             if( encontrado == false )
+             {
+                m_DetectorDerecha.detectMultiScale(m_ultimaImagen, Detections);
+                for (Rect rect : Detections.toArray()) 
+                {
+                   Core.rectangle(m_ultimaImagen, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(255,0, 0), 3 );
+                   Core.putText(m_ultimaImagen, eSimbolo.DERECHA.toString(), new Point(rect.x, rect.y), Core.FONT_HERSHEY_COMPLEX_SMALL, 1.5,new Scalar(255,0, 0), 1 ) ;
+                   ponObstaculos( dameCentro(rect), eSimbolo.DERECHA );
+                   encontrado = true;
+                }
+             }
+             if( encontrado == false )
+             {
+                m_DetectorIzquierda.detectMultiScale(m_ultimaImagen, Detections);
+                for (Rect rect : Detections.toArray()) 
+                {
+                   Core.rectangle(m_ultimaImagen, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(255,0, 0), 3 );
+                   Core.putText(m_ultimaImagen, eSimbolo.IZQUIERDA.toString(), new Point(rect.x, rect.y), Core.FONT_HERSHEY_COMPLEX_SMALL, 1.5,new Scalar(255,0, 0), 1 ) ;                
+                   ponObstaculos( dameCentro(rect), eSimbolo.IZQUIERDA );
+                   encontrado = true;
+                }                               
+             }
+             if( encontrado == false )
+             {
+                m_DetectorAtras.detectMultiScale(m_ultimaImagen, Detections);
+                for (Rect rect : Detections.toArray()) 
+                {
+                   Core.rectangle(m_ultimaImagen, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(255,0, 0), 3 );
+                   Core.putText(m_ultimaImagen, eSimbolo.ATRAS.toString(), new Point(rect.x, rect.y), Core.FONT_HERSHEY_COMPLEX_SMALL, 1.5,new Scalar(255,0, 0), 1 ) ;                
+                   ponObstaculos( dameCentro(rect), eSimbolo.ATRAS );
+                   encontrado = true;
+                }                               
+             }
+             
+             if ( encontrado == false) 
+             {
+                 CObstaculo.setObstaculo();
+             }
+             
+             if( grabar)
+             {
+                imwrite( "./img/img_"+m_imgNum+".jpg" , m_ultimaImagen );
+                m_imgNum++;                
+             }
+        }
+        catch(Exception e)
+        {
+            m_log.error(e.getMessage());
+        }
+        return m_ultimaImagen;
     }
     
     public boolean detectaColor(int iLowH, int iLowS, int iLowV , int iHighH ,int iHighS, int iHighV)

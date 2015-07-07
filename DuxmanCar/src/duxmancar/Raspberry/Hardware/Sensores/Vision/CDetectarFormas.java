@@ -24,10 +24,24 @@ public class CDetectarFormas extends CDetectorObstaculos
     
     public void callDetectar( String FicheroHaar, eSimbolo simbol)
     {       
-        CObstaculo.setObstaculo();
-        m_log.info(" Formas " + FicheroHaar);
-        m_camara.detectarForma( FicheroHaar, simbol );
+       // CObstaculo.setObstaculo();
+       // m_log.info(" Formas " + FicheroHaar);
+        //m_camara.detectarForma( FicheroHaar, simbol );
+        
+        m_camara.capturarImagen();
+        
+        m_camara.detectarFormas3( false );
     }
     
+     public void callDetectar( boolean grabar )
+    {       
+       // CObstaculo.setObstaculo();
+       // m_log.info(" Formas " + FicheroHaar);
+        //m_camara.detectarForma( FicheroHaar, simbol );
+        
+        m_camara.capturarImagen();
+        
+        m_camara.detectarFormas3( grabar );
+    }
     
 }

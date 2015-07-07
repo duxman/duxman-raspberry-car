@@ -3,6 +3,8 @@
  */
 package duxmancar.Raspberry.Hardware.Sensores.Distancia;
 
+import static duxmancar.Raspberry.Hardware.GPIO.CGpioPines.GPIO_PIN_HECHO;
+import static duxmancar.Raspberry.Hardware.GPIO.CGpioPines.GPIO_PIN_TRIGGER;
 import duxmancar.Raspberry.Hardware.Sensores.CSensor;
 import java.io.IOException;
 import org.apache.log4j.Logger;
@@ -24,14 +26,23 @@ public class CMedidorDistancia extends CSensor
     private GPIOPin trigger = null;
     private GPIOPin echo = null;
     private double m_distanciaMedia;
+    private static CMedidorDistancia m_instance = null;
     
+    public static CMedidorDistancia getInstance() throws Exception
+    {
+        if( m_instance == null )
+        {
+             m_instance = new CMedidorDistancia(GPIO_PIN_TRIGGER, GPIO_PIN_HECHO);
+        }
+        return m_instance;
+    }
     /**
      * Inicialize GPIO to echo and trigger pins
      *
      * @param _trigger
      * @param _echo
      */
-    public CMedidorDistancia(int _trigger, int _echo) throws Exception
+    private CMedidorDistancia(int _trigger, int _echo) throws Exception
     {
         m_log = Logger.getRootLogger();
         try
@@ -70,11 +81,11 @@ public class CMedidorDistancia extends CSensor
             long stop = starttime;
             long start = starttime;
             //echo will go 0 to 1 and I need save time for that. 2 seconds difference
-            while ((!echo.getValue()) && (start < starttime + 1000000000L * 2))
+            while ((!echo.getValue()) && (start < starttime + 250000000L ))
             {
                 start = System.nanoTime();
             }
-            while ((echo.getValue()) && (stop < starttime + 1000000000L * 2))
+            while ((echo.getValue()) && (stop < starttime + 250000000L ))
             {
                 stop = System.nanoTime();
             }

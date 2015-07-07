@@ -37,7 +37,7 @@ public class CProperties
    public static  String    HAAR_DERECHA        =    "HarrDerecha.xml";
    public static  String    HAAR_IZQUIERDA      =    "HarrIzquierda.xml";
    public static  String    HAAR_STOP           =    "HarrStop.xml";
-   //public static  String    HAAR_ATRAS          =    "HarrAtras.xml";
+   public static  String    HAAR_ATRAS          =    "HarrAtras.xml";
    
    
    

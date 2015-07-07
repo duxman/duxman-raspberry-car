@@ -15,9 +15,11 @@ public class CObstaculo
     public static int POSICION_CEN = 1;
     public static int POSICION_DER = 2;
     
-    public static int PIXEL_IZQ = 106;
-    public static int PIXEL_CEN = 214;
-    public static int PIXEL_DER = 320;
+    public static int ANCHO_IMG = 240;
+    public static int ALTO_IMG = 180;
+    public static int PIXEL_IZQ = 10;
+    public static int PIXEL_CEN = ANCHO_IMG-10;
+    public static int PIXEL_DER = ANCHO_IMG;
     public static enum eSimbolo 
     {
         DERECHA,IZQUIERDA,PARO,ATRAS,NONE,OTRO;
@@ -97,6 +99,6 @@ public class CObstaculo
     
     public static String texto()
     {        
-        return "DERECHA : " + ( (m_obstaculos[POSICION_DER]!= eSimbolo.NONE) ? "SI": "NO" ) + " CENTRO : " + ( (m_obstaculos[POSICION_CEN]!= eSimbolo.NONE) ? "SI": "NO" ) + " IZQUIERDA : " + ( (m_obstaculos[POSICION_IZQ]!= eSimbolo.NONE) ? "SI": "NO" );
+        return "DERECHA : " + ( (m_obstaculos[POSICION_DER]!= eSimbolo.NONE) ? m_obstaculos[POSICION_DER].toString() : "NO" ) + " CENTRO : " + ( (m_obstaculos[POSICION_CEN]!= eSimbolo.NONE) ? m_obstaculos[POSICION_CEN].toString(): "NO" ) + " IZQUIERDA : " + ( (m_obstaculos[POSICION_IZQ]!= eSimbolo.NONE) ? m_obstaculos[POSICION_IZQ].toString() : "NO" );
     }
 }

@@ -16,6 +16,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
@@ -54,6 +55,8 @@ public class CCamara
             if (m_camara.isOpened() == true)
             {
                 m_iIdCamara = iId;
+                m_camara.set(Highgui.CV_CAP_PROP_FRAME_WIDTH,320);
+                m_camara.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT, 240);
 
             }
             else

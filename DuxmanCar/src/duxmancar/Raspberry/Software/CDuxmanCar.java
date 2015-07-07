@@ -6,6 +6,7 @@
 package duxmancar.Raspberry.Software;
 
 import com.pi4j.io.gpio.GpioController;
+import duxmancar.Automatico.CAutoDetectarObstaculos;
 import duxmancar.Automatico.CConduccionAutonoma;
 import duxmancar.Datos.CDato;
 import duxmancar.Datos.CListaDatosProvider;
@@ -14,6 +15,8 @@ import duxmancar.Datos.Procesadores.CServoControl;
 import duxmancar.Net.CBtServer;
 import duxmancar.Net.CNetServer;
 import duxmancar.Raspberry.Hardware.ControlMotores.CGestorI2CAdafruit;
+import duxmancar.Raspberry.Hardware.Sensores.Vision.CDetectarCirculos;
+import duxmancar.Raspberry.Hardware.Sensores.Vision.CDetectorObstaculos;
 import duxmancar.util.IDatosGenerales;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +41,7 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
     private GpioController m_gpio;
     private CListaDatosProvider m_listaDatosProvider;
     private CConduccionAutonoma m_automatico;
+    private CAutoDetectarObstaculos m_detectorObstaculos;
 
     public void create() throws Exception
     {
@@ -62,7 +66,16 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
         m_listaDatosProvider = CListaDatosProvider.getInstance();
         m_log.info("Obtenemos instancia del proveedor de datos");
         
-        m_automatico  = new CConduccionAutonoma();
+        m_automatico  = new CConduccionAutonoma();               
+        m_automatico.setSalir( false );
+        m_automatico.setPause( true );         
+        m_automatico.start();
+        
+        m_detectorObstaculos = new CAutoDetectarObstaculos();
+        m_detectorObstaculos.setPause(true);
+        m_detectorObstaculos.setSalir(false);
+        m_detectorObstaculos.start();
+       
                 
     }
 
@@ -124,6 +137,7 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
                 }
             }
         }
+        m_automatico.setSalir( bFin );
     }
 
     public void compruebaConexion()
@@ -189,11 +203,14 @@ public class CDuxmanCar extends Thread implements IDatosGenerales
             if( dato.getAccion() == eAccionesCon.CONECTAR.ordinal() )
             {
                 m_automatico.setSalir( false );
-                m_automatico.start();
+                m_automatico.setPause(false );      
+                m_detectorObstaculos.setPause(false);
+                m_detectorObstaculos.setSalir(false);
             }
             else if( dato.getAccion() == eAccionesCon.DESCONECTAR.ordinal() )
             {
-                m_automatico.setSalir( true );                
+                m_automatico.setPause(true );                              
+                m_detectorObstaculos.setPause(true);        
             }                        
         }
         return rtn;

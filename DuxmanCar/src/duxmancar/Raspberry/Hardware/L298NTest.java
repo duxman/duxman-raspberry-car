@@ -9,6 +9,7 @@ import duxmancar.Raspberry.Hardware.Sensores.Distancia.CMedidorDistancia;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioProvider;
+import duxmancar.Automatico.CAutoDetectarObstaculos;
 import duxmancar.CProperties;
 import static duxmancar.CProperties.HAAR_DERECHA;
 import duxmancar.Raspberry.Hardware.Sensores.Vision.CObstaculo;
@@ -46,7 +47,7 @@ public class L298NTest
         //m_circulos.start();
         
         //System.load("/home/pi/v1/lib/libdio.so");
-        m_sensorDistancia =  new CMedidorDistancia(27,17);
+        m_sensorDistancia =  CMedidorDistancia.getInstance();
         System.out.print ("Probamos PWM SOFT");
         m_motores = CMotorControlPuenteH.getInstance();
         m_motores.inicializa (GPIO_CONTROLLER, true);
@@ -178,18 +179,12 @@ public class L298NTest
         }        
         
         if (comando.equals ("C"))
-        {   while (comando.equals ("Q") == false)
-            {                  
-                m_formas.callDetectar(CProperties.HAAR_DERECHA,CObstaculo.eSimbolo.DERECHA);
-                m_formas.callDetectar(CProperties.HAAR_IZQUIERDA,CObstaculo.eSimbolo.IZQUIERDA);
-                m_formas.callDetectar(CProperties.HAAR_STOP,CObstaculo.eSimbolo.PARO);
-                m_log.info(CObstaculo.texto());
-                
-                if (sc.hasNextLine ())
-                {
-                    comando = sc.nextLine ().toUpperCase ();
-                }
-            }
+        {  
+            CAutoDetectarObstaculos m_detectorObstaculos = new CAutoDetectarObstaculos();
+            m_detectorObstaculos.setPause(false);
+            m_detectorObstaculos.setSalir(false);
+            m_detectorObstaculos.start();
+            while(true) CObstaculo.texto();
         }   
       }       
     }

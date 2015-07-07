@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 public abstract class CSensor extends Thread
 {    
     public static enum eSensor {NINGUNO,DISTANCIA,VISION};
-    public static int NUMERO_MEDICIONES = 10;
+    public static int NUMERO_MEDICIONES = 5;
     
     protected eSensor m_tipoSesor;           
     protected Logger  m_log;
